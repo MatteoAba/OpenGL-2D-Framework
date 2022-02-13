@@ -45,7 +45,7 @@ void LayerStack::OnEvent(const std::vector<Event>& EventQueue)
 	for (Event e : EventQueue) {
 		// eventi top - down
 		if (m_LayerStack.size())
-			for (uint64_t i = m_LayerStack.size() - 1; i >= 0; --i)
+			for (int i = (int)(m_LayerStack.size() - 1); i >= 0; --i)
 				m_LayerStack[i]->OnEvent(e);
 	}
 }
@@ -54,7 +54,7 @@ void LayerStack::OnUpdate(float ts)
 {
 	// update top - down
 	if (m_LayerStack.size())
-		for (uint64_t i = m_LayerStack.size() - 1; i >= 0; --i)
+		for (int i = (int)(m_LayerStack.size() - 1); i >= 0; --i)
 			m_LayerStack[i]->OnUpdate(ts);
 }
 
@@ -62,6 +62,6 @@ void LayerStack::OnRender()
 {
 	// render bottom - up
 	if (m_LayerStack.size())
-		for (uint64_t i = 0; i < m_LayerStack.size(); ++i)
+		for (int i = 0; i < (int)(m_LayerStack.size()); ++i)
 			m_LayerStack[i]->OnRender();
 }

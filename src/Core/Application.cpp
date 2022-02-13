@@ -3,19 +3,22 @@
 #include <stb_image.h>
 
 #include "Application.h"
-#include "../Renderer/Shader.h"
+#include "../Layers/TestLayer.h"
 
 Application::Application(int width, int height, const std::string& title)
     : m_LastFrame(0), m_TimeStep(0), m_Running(true)
 {
+    // creazione finestra
     Log::Init();
     LOG_TRACE("Creazione finestra {}x{} e contesto OpenGL", width, height);
     m_Window = new Window(this, { width, height, title });
     m_Window->SetVSync(1);
 
+    // creazione layer stack
     m_LayerStack = new LayerStack(this);
 
-    glEnable(GL_DEPTH_TEST);
+    // DA TOGLIERE
+    // glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 }
 
@@ -27,9 +30,8 @@ Application::~Application()
 
 void Application::Inizialize()
 {
-    // creo un layer di prova
-    Shader test("Triangolo", "assets/Shader/triangolo.vert", "assets/Shader/triangolo.frag");
-    
+    Layer* test = new TestLayer("Test Layer");
+    m_LayerStack->PushLayer(test);
 }
 
 void Application::Run()

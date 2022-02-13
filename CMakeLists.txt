@@ -66,6 +66,10 @@ set(PROJECT_SRC
     src/Core/Event.cpp
     src/Core/Keycodes.h
 
+    # --- src/Layers/
+    src/Layers/TestLayer.h
+    src/Layers/TestLayer.cpp
+
     # --- src/Renderer/
     src/Renderer/Renderer.h
     src/Renderer/Renderer.cpp
@@ -84,6 +88,7 @@ set(PROJECT_SRC
 # ricreo la struttura dei file per visual studio
 source_group(src "src")
 source_group(src/Core "src/Core")
+source_group(src/Layers "src/Layers")
 source_group(src/Renderer "src/Renderer")
 source_group(shader "assets/Shader")
  

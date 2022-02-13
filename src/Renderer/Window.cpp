@@ -69,7 +69,7 @@ void Window::ProcessEventBuffer()
 
     // gestione chiusura finestra
     if (glfwWindowShouldClose(m_Window))
-        m_Owner->setRunning(false);
+        m_Owner->SetRunning(false);
 }
 
 void Window::WindowResize(int width, int height)
@@ -82,66 +82,66 @@ void Window::KeybordButton(int key, int action)
 {
     // tasto W
     if (key == GLFW_KEY_W && action == GLFW_PRESS)
-        m_Owner->pushEvent(Event(Keycode::KEY_W, KeyEventType::PRESSED));
+        m_Owner->PushEvent(Event(Keycode::KEY_W, KeyEventType::PRESSED));
     if (key == GLFW_KEY_W && action == GLFW_REPEAT)
-        m_Owner->pushEvent(Event(Keycode::KEY_W, KeyEventType::REPEATED));
+        m_Owner->PushEvent(Event(Keycode::KEY_W, KeyEventType::REPEATED));
     if (key == GLFW_KEY_W && action == GLFW_RELEASE)
-        m_Owner->pushEvent(Event(Keycode::KEY_W, KeyEventType::RELEASED));
+        m_Owner->PushEvent(Event(Keycode::KEY_W, KeyEventType::RELEASED));
     
     // tasto A
     if (key == GLFW_KEY_A && action == GLFW_PRESS)
-        m_Owner->pushEvent(Event(Keycode::KEY_A, KeyEventType::PRESSED));
+        m_Owner->PushEvent(Event(Keycode::KEY_A, KeyEventType::PRESSED));
     if (key == GLFW_KEY_A && action == GLFW_REPEAT)
-        m_Owner->pushEvent(Event(Keycode::KEY_A, KeyEventType::REPEATED));
+        m_Owner->PushEvent(Event(Keycode::KEY_A, KeyEventType::REPEATED));
     if (key == GLFW_KEY_A && action == GLFW_RELEASE)
-        m_Owner->pushEvent(Event(Keycode::KEY_A, KeyEventType::RELEASED));
+        m_Owner->PushEvent(Event(Keycode::KEY_A, KeyEventType::RELEASED));
 
     // tasto S
     if (key == GLFW_KEY_S && action == GLFW_PRESS)
-        m_Owner->pushEvent(Event(Keycode::KEY_S, KeyEventType::PRESSED));
+        m_Owner->PushEvent(Event(Keycode::KEY_S, KeyEventType::PRESSED));
     if (key == GLFW_KEY_S && action == GLFW_REPEAT)
-        m_Owner->pushEvent(Event(Keycode::KEY_S, KeyEventType::REPEATED));
+        m_Owner->PushEvent(Event(Keycode::KEY_S, KeyEventType::REPEATED));
     if (key == GLFW_KEY_S && action == GLFW_RELEASE)
-        m_Owner->pushEvent(Event(Keycode::KEY_S, KeyEventType::RELEASED));
+        m_Owner->PushEvent(Event(Keycode::KEY_S, KeyEventType::RELEASED));
 
     // tasto D
     if (key == GLFW_KEY_D && action == GLFW_PRESS)
-        m_Owner->pushEvent(Event(Keycode::KEY_D, KeyEventType::PRESSED));
+        m_Owner->PushEvent(Event(Keycode::KEY_D, KeyEventType::PRESSED));
     if (key == GLFW_KEY_D && action == GLFW_REPEAT)
-        m_Owner->pushEvent(Event(Keycode::KEY_D, KeyEventType::REPEATED));
+        m_Owner->PushEvent(Event(Keycode::KEY_D, KeyEventType::REPEATED));
     if (key == GLFW_KEY_D && action == GLFW_RELEASE)
-        m_Owner->pushEvent(Event(Keycode::KEY_D, KeyEventType::RELEASED));
+        m_Owner->PushEvent(Event(Keycode::KEY_D, KeyEventType::RELEASED));
 
     // tasto ESC
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        m_Owner->pushEvent(Event(Keycode::KEY_ESC, KeyEventType::PRESSED));
+        m_Owner->PushEvent(Event(Keycode::KEY_ESC, KeyEventType::PRESSED));
     if (key == GLFW_KEY_ESCAPE && action == GLFW_REPEAT)
-        m_Owner->pushEvent(Event(Keycode::KEY_ESC, KeyEventType::REPEATED));
+        m_Owner->PushEvent(Event(Keycode::KEY_ESC, KeyEventType::REPEATED));
     if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-        m_Owner->pushEvent(Event(Keycode::KEY_ESC, KeyEventType::RELEASED));
+        m_Owner->PushEvent(Event(Keycode::KEY_ESC, KeyEventType::RELEASED));
 }
 
 void Window::MouseButton(int button, int action)
 {
     // mouse 1
     if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
-        m_Owner->pushEvent(Event(Keycode::MOUSE_1, MouseEventType::CLICK));
+        m_Owner->PushEvent(Event(Keycode::MOUSE_1, MouseEventType::CLICK));
     if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE)
-        m_Owner->pushEvent(Event(Keycode::MOUSE_1, MouseEventType::UNCLICK));
+        m_Owner->PushEvent(Event(Keycode::MOUSE_1, MouseEventType::UNCLICK));
 
     // mouse 2
     if (button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS)
-        m_Owner->pushEvent(Event(Keycode::MOUSE_2, MouseEventType::CLICK));
+        m_Owner->PushEvent(Event(Keycode::MOUSE_2, MouseEventType::CLICK));
     if (button == GLFW_MOUSE_BUTTON_2 && action == GLFW_RELEASE)
-        m_Owner->pushEvent(Event(Keycode::MOUSE_2, MouseEventType::UNCLICK));
+        m_Owner->PushEvent(Event(Keycode::MOUSE_2, MouseEventType::UNCLICK));
 }
 
 void Window::MouseMovement(double xpos, double ypos)
 {
-    m_Owner->pushEvent(Event((uint32_t)xpos, (uint32_t)ypos));
+    m_Owner->PushEvent(Event((uint32_t)xpos, (uint32_t)ypos));
 }
 
 void Window::MouseScroll(double xoffset, double yoffset)
 {
-    m_Owner->pushEvent(Event((uint16_t)xoffset, (uint16_t)yoffset));
+    m_Owner->PushEvent(Event((uint16_t)xoffset, (uint16_t)yoffset));
 }

@@ -18,8 +18,8 @@ public:
 	void Inizialize();
 	void Run();
 
-	inline void setRunning(bool state) { m_Running = state; }
-	inline void pushEvent(Event e) { m_EventQueue.push_back(e); }
+	inline void SetRunning(bool state) { m_Running = state; }
+	inline void PushEvent(Event e) { m_EventQueue.push_back(e); }
 
 private:
 	// main loop

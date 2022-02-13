@@ -71,8 +71,12 @@ set(PROJECT_SRC
     src/Renderer/Renderer.cpp
     src/Renderer/Window.h
     src/Renderer/Window.cpp
+    src/Renderer/Shader.h
+    src/Renderer/Shader.cpp
 	
     # --- assets/Shader/
+    assets/Shader/triangolo.vert
+    assets/Shader/triangolo.frag
     
     ${PREC_HEADER}
 )

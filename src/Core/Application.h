@@ -7,13 +7,7 @@
 #include "Log.h"
 #include "../Renderer/Window.h"
 #include "Event.h"
-
-// ------- TEMP ---------------
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-// ----------------------------
+#include "LayerStack.h"
 
 
 class Application
@@ -39,4 +33,5 @@ private:
 	Window* m_Window;
 	float m_LastFrame, m_TimeStep;
 	std::vector<Event> m_EventQueue;
+	LayerStack m_LayerStack;
 };

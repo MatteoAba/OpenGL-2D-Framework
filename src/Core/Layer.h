@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../cglph.h"
+#include "Event.h"
 
 class Layer
 {
@@ -14,7 +15,7 @@ public:
 	virtual void OnDetach() {};
 
 	// loop di funzionamento
-	virtual void OnEvent() {};
+	virtual void OnEvent(Event e) {};
 	virtual void OnUpdate(float ts) {};
 	virtual void OnRender() {};
 

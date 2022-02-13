@@ -6,7 +6,6 @@
 #include "../cglph.h"
 #include "Log.h"
 #include "../Renderer/Window.h"
-#include "Event.h"
 #include "LayerStack.h"
 
 
@@ -31,7 +30,7 @@ private:
 private:
 	bool m_Running;
 	Window* m_Window;
+	LayerStack* m_LayerStack;
 	float m_LastFrame, m_TimeStep;
 	std::vector<Event> m_EventQueue;
-	LayerStack m_LayerStack;
 };

@@ -12,7 +12,9 @@ Application::Application(int width, int height, const std::string& title)
     LOG_TRACE("Creazione finestra {}x{} e contesto OpenGL", width, height);
     m_Window = new Window(this, { width, height, title });
     m_Window->SetVSync(1);
-    
+
+    m_LayerStack = new LayerStack(this);
+
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
 }
@@ -20,6 +22,7 @@ Application::Application(int width, int height, const std::string& title)
 Application::~Application()
 {
     delete m_Window;
+    delete m_LayerStack;
 }
 
 void Application::Inizialize()
@@ -47,12 +50,14 @@ void Application::Run()
 
 void Application::OnEvent()
 {
-    m_LayerStack.OnEvent();
+    // trasmetto gli eventi ai layer e svuoto la coda
+    m_LayerStack->OnEvent(m_EventQueue);
+    m_EventQueue.clear();
 }
 
 void Application::OnUpdate()
 {
-    m_LayerStack.OnUpdate(m_TimeStep);
+    m_LayerStack->OnUpdate(m_TimeStep);
 }
 
 void Application::OnRender()
@@ -62,7 +67,7 @@ void Application::OnRender()
     glClear(GL_COLOR_BUFFER_BIT);
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_LayerStack.OnRender();
+    m_LayerStack->OnRender();
 
     // swap buffer e gestione eventi I/O
     m_Window->ProcessEventBuffer();

@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Layer.h"
+#include "Event.h"
+
+class Application;
 
 class LayerStack
 {
 public:
-	LayerStack();
+	LayerStack(Application* owner);
 	~LayerStack();
 
 	// gestione layer
@@ -15,10 +18,11 @@ public:
 	void LogLayers();
 
 	// main loop utilities
-	void OnEvent();
+	void OnEvent(const std::vector<Event>& EventQueue);
 	void OnUpdate(float ts);
 	void OnRender();
 
 private:
 	std::vector<Layer*> m_LayerStack;
+	Application* m_Owner;
 };

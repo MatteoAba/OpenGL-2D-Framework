@@ -3,6 +3,7 @@
 #include <stb_image.h>
 
 #include "Application.h"
+#include "Timer.h"
 #include "../Layers/TestLayer.h"
 
 Application::Application(int width, int height, const std::string& title)
@@ -30,6 +31,7 @@ Application::~Application()
 
 void Application::Inizialize()
 {
+    ScopedTimer duration("Application Starting Time");
     Layer* test = new TestLayer("Test Layer");
     m_LayerStack->PushLayer(test);
 }

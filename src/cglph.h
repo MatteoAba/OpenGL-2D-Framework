@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <chrono>
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>

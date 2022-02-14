@@ -65,6 +65,7 @@ set(PROJECT_SRC
     src/Core/Event.h
     src/Core/Event.cpp
     src/Core/Keycodes.h
+    src/Core/Timer.h
 
     # --- src/Layers/
     src/Layers/TestLayer.h

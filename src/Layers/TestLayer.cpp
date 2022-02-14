@@ -12,6 +12,7 @@
 
 void startImGui(Window* window);
 void ImGuiRenderBegin(bool* show_demo_window);
+void ImGuiDrawViewport(uint32_t colorAttachmentID);
 void ImGuiRenderEnd();
 void ImGuiDelete();
 
@@ -169,6 +170,11 @@ void TestLayer::OnRender()
 	m_Shader->Unbind();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	// passo i dati del framebuffer a ImGui per il viewport
+	ImGuiDrawViewport(m_TCB);
+
+	//ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ 640, 480 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
 	// rendering del piano
 	m_ScreenShader->Bind();
 	GLCall(glBindVertexArray(m_VAO_Screen));
@@ -222,10 +228,6 @@ void startImGui(Window* window)
 	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
 	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	//IM_ASSERT(font != NULL);
-
-	// Our state
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
 void ImGuiRenderBegin(bool* show_demo_window)
@@ -237,13 +239,29 @@ void ImGuiRenderBegin(bool* show_demo_window)
 	
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	ImGui::ShowDemoWindow(show_demo_window);
+}
 
-	// Rendering
-	ImGui::Render();
+void ImGuiDrawViewport(uint32_t colorAttachmentID)
+{
+
+	ImGui::Begin("Viewport");
+	{
+		ImVec2 wsize = ImGui::GetWindowSize();
+		ImGui::Image((ImTextureID)colorAttachmentID, wsize, ImVec2(0, 1), ImVec2(1, 0));
+	}
+	ImGui::End();
+
 }
 
 void ImGuiRenderEnd()
 {
+	// TODO
+	// ImGuiIO& io = ImGui::GetIO();
+	// io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
+
+	// Rendering
+	ImGui::Render();
+
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

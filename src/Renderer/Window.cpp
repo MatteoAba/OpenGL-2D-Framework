@@ -1,6 +1,7 @@
 #include "../Core/Application.h"
 #include "../Core/Log.h"
 
+#include <stb_image.h>
 
 Window::Window(Application* owner, WindowProperties properties)
     : m_Owner(owner), m_Properties(properties.width, properties.height, properties.title)
@@ -52,6 +53,11 @@ Window::Window(Application* owner, WindowProperties properties)
     LOG_INFO("Vendor: {}", glGetString(GL_VENDOR));
     LOG_INFO("Driver: {}", glGetString(GL_RENDERER));
     LOG_INFO("Version OpenGL: {}", glGetString(GL_VERSION));
+
+    GLFWimage images[1];
+    images[0].pixels = stbi_load("assets/Img/icon.png", &images[0].width, &images[0].height, 0, 4);
+    glfwSetWindowIcon(m_Window, 1, images);
+    stbi_image_free(images[0].pixels);
 }
 
 Window::~Window()

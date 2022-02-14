@@ -28,6 +28,7 @@ public:
 	inline Application* GetOwner() { return m_Owner; }
 	inline float GetFrameTime() { return (float)glfwGetTime(); }
 	inline void SetVSync(int value) { glfwSwapInterval(value); }
+	inline GLFWwindow* GetNativeWindow() { return m_Window; }
 
 public:
 	// callback eventi (fanno il dispatch dell'evento all'applicazione)

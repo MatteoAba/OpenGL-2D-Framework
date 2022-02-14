@@ -42,6 +42,26 @@ target_include_directories(stb_image PUBLIC "vendor/stb_image")
 add_subdirectory("vendor/glm")
 add_subdirectory("vendor/spdlog")
 
+# imgui da cartella
+add_library(imgui STATIC 
+        "vendor/imgui/imconfig.h"
+		"vendor/imgui/imgui.h"
+		"vendor/imgui/imgui.cpp"
+		"vendor/imgui/imgui_demo.cpp"
+		"vendor/imgui/imgui_draw.cpp"
+        "vendor/imgui/backends/imgui_impl_glfw.h"
+        "vendor/imgui/backends/imgui_impl_glfw.cpp"
+        "vendor/imgui/backends/imgui_impl_opengl3.h"
+        "vendor/imgui/backends/imgui_impl_opengl3.cpp"
+		"vendor/imgui/imgui_internal.h"
+		"vendor/imgui/imgui_tables.cpp"
+		"vendor/imgui/imgui_widgets.cpp"
+		"vendor/imgui/imstb_truetype.h"
+		"vendor/imgui/imstb_rectpack.h"
+		"vendor/imgui/imstb_textedit.h"
+)
+target_include_directories(imgui PUBLIC "vendor/imgui" "vendor/imgui/backends" "vendor/glfw/include")
+
 # ------------------------------
 
 # ---------- progetto ----------
@@ -96,9 +116,9 @@ source_group(src/Renderer "src/Renderer")
 source_group(shader "assets/Shader")
  
 add_executable(ChessGL ${PROJECT_SRC})
-target_include_directories(ChessGL PRIVATE "vendor/Glad/include" "vendor/glm" "vendor/stb_image")       			    # cartelle da includere
-target_link_libraries(ChessGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog)	                                    # librerie da linkare
-#target_precompile_headers(ChessGL PRIVATE ${PREC_HEADER})                                                               # precompiled headers
+target_include_directories(ChessGL PRIVATE "vendor/Glad/include" "vendor/glm" "vendor/stb_image" "vendor/imgui")        # cartelle da includere
+target_link_libraries(ChessGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog imgui)	                                # librerie da linkare
+#target_precompile_headers(ChessGL PRIVATE ${PREC_HEADER})                                                              # precompiled headers
 
 # copio le risorse (shader, media, ecc..) nella cartella dell'eseguibile
 if (MSVC)

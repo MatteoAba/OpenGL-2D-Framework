@@ -32,7 +32,8 @@ Application::~Application()
 void Application::Inizialize()
 {
     LOG_DURATION("Application Startup");
-    Layer* test = new TestLayer("Test Layer");
+
+    Layer* test = new TestLayer("Test Layer", this);
     m_LayerStack->PushLayer(test);
 }
 

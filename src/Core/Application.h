@@ -21,6 +21,8 @@ public:
 	inline void SetRunning(bool state) { m_Running = state; }
 	inline void PushEvent(Event e) { m_EventQueue.push_back(e); }
 
+	inline Window* GetWindow() { return m_Window; }
+
 private:
 	// main loop
 	void OnEvent();

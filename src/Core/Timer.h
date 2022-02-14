@@ -21,9 +21,11 @@ class ScopedTimer
 public:
 	ScopedTimer(const std::string& name)
 		: m_Name(name) {}
-	~ScopedTimer() { LOG_TRACE("[TIMER] {} : {}ms", m_Name, m_Timer.MillisecondsElapsed()); }
+	~ScopedTimer() { LOG_WARN("[TIMER] {} : {}ms", m_Name, m_Timer.MillisecondsElapsed()); }
 
 private:
 	Timer m_Timer;
 	std::string m_Name;
 };
+
+#define LOG_DURATION(...)	ScopedTimer duration(__VA_ARGS__)

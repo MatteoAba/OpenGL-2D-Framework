@@ -82,6 +82,8 @@ set(PROJECT_SRC
     # --- assets/Shader/
     assets/Shader/triangolo.vert
     assets/Shader/triangolo.frag
+    assets/Shader/TextureOnQuad.vert
+    assets/Shader/TextureOnQuad.frag
     
     ${PREC_HEADER}
 )

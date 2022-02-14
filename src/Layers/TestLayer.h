@@ -3,11 +3,15 @@
 #include "../Core/Layer.h"
 #include "../Renderer/Shader.h"
 
+// TODO prendila dalla window (che va aggiornata acnhe con gli eventi)
+#define SCR_WIDTH 640
+#define SCR_HEIGHT 480
+
 class TestLayer : public Layer
 {
 public:
 	TestLayer(std::string name)
-		: Layer(name), m_Shader(nullptr), m_VAO(0), m_VBO(0) {}
+		: Layer(name) {}
 
 	// creazione e distruzione
 	virtual void OnAttach() override;
@@ -19,6 +23,7 @@ public:
 	virtual void OnRender() override;
 
 private:
-	uint32_t m_VAO, m_VBO;
-	Shader* m_Shader;
+	uint32_t m_VAO, m_VBO, m_VAO_Screen, m_VBO_Screen;
+	uint32_t m_FBO, m_TCB, m_RBO;
+	Shader *m_Shader, *m_ScreenShader;
 };

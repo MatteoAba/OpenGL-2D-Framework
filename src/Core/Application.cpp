@@ -31,7 +31,7 @@ Application::~Application()
 
 void Application::Inizialize()
 {
-    ScopedTimer duration("Application Starting Time");
+    LOG_DURATION("Application Startup");
     Layer* test = new TestLayer("Test Layer");
     m_LayerStack->PushLayer(test);
 }
@@ -66,7 +66,7 @@ void Application::OnUpdate()
 
 void Application::OnRender()
 {
-    // flush screen
+    // flush screen     TODO: da far fare al renderer
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

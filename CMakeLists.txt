@@ -98,6 +98,15 @@ target_include_directories(ChessGL PRIVATE "vendor/Glad/include" "vendor/glm" "v
 target_link_libraries(ChessGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog)	                                    # librerie da linkare
 #target_precompile_headers(ChessGL PRIVATE ${PREC_HEADER})                                                               # precompiled headers
 
+# copio le risorse (shader, media, ecc..) nella cartella dell'eseguibile
+if (MSVC)
+    file(COPY "assets" DESTINATION ${CMAKE_SOURCE_DIR}/bin/Debug)
+    file(COPY "assets" DESTINATION ${CMAKE_SOURCE_DIR}/bin/Release)
+    file(COPY "assets" DESTINATION ${CMAKE_SOURCE_DIR}/build)
+else()
+    file(COPY "assets" DESTINATION ${CMAKE_SOURCE_DIR}/bin)
+endif()
+
 # in Visual Studio setto il progetto come Start Up Project
 if (MSVC)
     if (${CMAKE_VERSION} VERSION_LESS "3.6.0") 

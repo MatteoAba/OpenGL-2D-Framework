@@ -29,7 +29,6 @@ Window::Window(Application* owner, WindowProperties properties)
         static_cast<Window*>(glfwGetWindowUserPointer(window))->WindowResize(width, height);
     });
     glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-        //Window::KeybordButton(key, action);
         static_cast<Window*>(glfwGetWindowUserPointer(window))->KeybordButton(key, action);
     });
     glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
@@ -54,6 +53,7 @@ Window::Window(Application* owner, WindowProperties properties)
     LOG_INFO("Driver: {}", glGetString(GL_RENDERER));
     LOG_INFO("Version OpenGL: {}", glGetString(GL_VERSION));
 
+    // setto l'icona della finestra
     GLFWimage images[1];
     images[0].pixels = stbi_load("assets/Img/icon.png", &images[0].width, &images[0].height, 0, 4);
     glfwSetWindowIcon(m_Window, 1, images);

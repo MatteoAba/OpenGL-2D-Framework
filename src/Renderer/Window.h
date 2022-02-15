@@ -24,14 +24,23 @@ public:
 	~Window();
 	void ProcessEventBuffer();
 
+	// setters and getters for members
 	inline GLFWwindow* GetWindow() { return m_Window; }
 	inline Application* GetOwner() { return m_Owner; }
 	inline float GetFrameTime() { return (float)glfwGetTime(); }
 	inline void SetVSync(int value) { glfwSwapInterval(value); }
 	inline GLFWwindow* GetNativeWindow() { return m_Window; }
 
+	// setters and getters for windows properties
+	inline void SetWidth(int width) { m_Properties.width = width; }
+	inline void SetHeight(int height) { m_Properties.height = height; }
+	inline void SetTitle(std::string title) { m_Properties.title = title;  glfwSetWindowTitle(m_Window, title.c_str()); }
+	inline int GetWidth() { return m_Properties.width; }
+	inline int GetHeight() { return m_Properties.height; }
+	inline std::string GetTitle() { return m_Properties.title; }
+
 public:
-	// callback eventi (fanno il dispatch dell'evento all'applicazione)
+	// events callback (dispatch events to application)
 	void WindowResize(int width, int height);
 	void KeybordButton(int key, int action);
 	void MouseButton(int button, int action);

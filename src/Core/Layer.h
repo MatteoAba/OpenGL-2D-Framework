@@ -14,16 +14,18 @@ public:
 	inline std::string GetName() { return m_Name; }
 	inline Application* GetOwner() { return m_Owner; }
 
-	// creazione e distruzione
+	// creation and destruction in application
 	virtual void OnAttach() {};
 	virtual void OnDetach() {};
 
-	// loop di funzionamento
+	// application loop behaviour
 	virtual void OnEvent(Event e) {};
 	virtual void OnUpdate(float ts) {};
 	virtual void OnRender() {};
 
+protected:
+	Application* m_Owner;
+
 private:
 	std::string m_Name;
-	Application* m_Owner;
 };

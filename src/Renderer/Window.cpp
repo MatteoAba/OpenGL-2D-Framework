@@ -6,13 +6,13 @@
 Window::Window(Application* owner, WindowProperties properties)
     : m_Owner(owner), m_Properties(properties.width, properties.height, properties.title)
 {
-    // inizializzazione OpenGL
+    // OpenGL initialization
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // creazione finestra e contesto
+    // window and context creation
     m_Window = glfwCreateWindow(properties.width, properties.height, properties.title.c_str(), NULL, NULL);
     if (m_Window == NULL) {
         LOG_CRITICAL("Creazione dell'oggetto Window fallita!");
@@ -20,11 +20,11 @@ Window::Window(Application* owner, WindowProperties properties)
         return;
     }
     glfwMakeContextCurrent(m_Window);
-
-    // setto il puntatore alla classe window così da poter raggiungere dalle callback le funzioni membro della classe window
+    
+    // set pointer to window, so it is reachable from the lamda function in glfw callback 
     glfwSetWindowUserPointer(m_Window, this);
 
-    // dispatch eventi
+    // events dispath
     glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
         static_cast<Window*>(glfwGetWindowUserPointer(window))->WindowResize(width, height);
     });
@@ -41,19 +41,19 @@ Window::Window(Application* owner, WindowProperties properties)
         static_cast<Window*>(glfwGetWindowUserPointer(window))->MouseScroll(xoffset, yoffset);
     });
 
-    // GLAD per le funzioni OpenGL
+    // GLAD for OpenGL function
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         LOG_CRITICAL("Inizializzazione di GLAD fallita");
         return;
     }
 
-    // log info scheda video
+    // system log
     LOG_INFO("Contesto OpenGL inizializzato correttamente");
     LOG_INFO("Vendor: {}", glGetString(GL_VENDOR));
     LOG_INFO("Driver: {}", glGetString(GL_RENDERER));
     LOG_INFO("Version OpenGL: {}", glGetString(GL_VERSION));
 
-    // setto l'icona della finestra
+    // set the icon
     GLFWimage images[1];
     images[0].pixels = stbi_load("assets/Img/icon.png", &images[0].width, &images[0].height, 0, 4);
     glfwSetWindowIcon(m_Window, 1, images);
@@ -69,11 +69,11 @@ Window::~Window()
 
 void Window::ProcessEventBuffer()
 {
-    // swap buffer e gestione eventi I/O
+    // swap buffer and I/O events handling by glfw
     glfwSwapBuffers(m_Window);
     glfwPollEvents();
 
-    // gestione chiusura finestra
+    // check if the window should be closed
     if (glfwWindowShouldClose(m_Window))
         m_Owner->SetRunning(false);
 }
@@ -82,11 +82,15 @@ void Window::WindowResize(int width, int height)
 {
     // update viewport
     glViewport(0, 0, width, height);
+
+    // update window properties
+    SetWidth(width);
+    SetHeight(height);
 }
 
 void Window::KeybordButton(int key, int action)
 {
-    // tasto W
+    // key W
     if (key == GLFW_KEY_W && action == GLFW_PRESS)
         m_Owner->PushEvent(Event(Keycode::KEY_W, KeyEventType::PRESSED));
     if (key == GLFW_KEY_W && action == GLFW_REPEAT)
@@ -94,7 +98,7 @@ void Window::KeybordButton(int key, int action)
     if (key == GLFW_KEY_W && action == GLFW_RELEASE)
         m_Owner->PushEvent(Event(Keycode::KEY_W, KeyEventType::RELEASED));
     
-    // tasto A
+    // key A
     if (key == GLFW_KEY_A && action == GLFW_PRESS)
         m_Owner->PushEvent(Event(Keycode::KEY_A, KeyEventType::PRESSED));
     if (key == GLFW_KEY_A && action == GLFW_REPEAT)
@@ -102,7 +106,7 @@ void Window::KeybordButton(int key, int action)
     if (key == GLFW_KEY_A && action == GLFW_RELEASE)
         m_Owner->PushEvent(Event(Keycode::KEY_A, KeyEventType::RELEASED));
 
-    // tasto S
+    // key S
     if (key == GLFW_KEY_S && action == GLFW_PRESS)
         m_Owner->PushEvent(Event(Keycode::KEY_S, KeyEventType::PRESSED));
     if (key == GLFW_KEY_S && action == GLFW_REPEAT)
@@ -110,7 +114,7 @@ void Window::KeybordButton(int key, int action)
     if (key == GLFW_KEY_S && action == GLFW_RELEASE)
         m_Owner->PushEvent(Event(Keycode::KEY_S, KeyEventType::RELEASED));
 
-    // tasto D
+    // key D
     if (key == GLFW_KEY_D && action == GLFW_PRESS)
         m_Owner->PushEvent(Event(Keycode::KEY_D, KeyEventType::PRESSED));
     if (key == GLFW_KEY_D && action == GLFW_REPEAT)
@@ -118,7 +122,7 @@ void Window::KeybordButton(int key, int action)
     if (key == GLFW_KEY_D && action == GLFW_RELEASE)
         m_Owner->PushEvent(Event(Keycode::KEY_D, KeyEventType::RELEASED));
 
-    // tasto ESC
+    // key ESC
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         m_Owner->PushEvent(Event(Keycode::KEY_ESC, KeyEventType::PRESSED));
     if (key == GLFW_KEY_ESCAPE && action == GLFW_REPEAT)

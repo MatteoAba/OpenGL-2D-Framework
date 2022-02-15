@@ -13,7 +13,7 @@
 void startImGui(Window* window);
 void ImGuiRenderBegin(bool* show_demo_window);
 void ImGuiDrawViewport(uint32_t colorAttachmentID);
-void ImGuiRenderEnd();
+void ImGuiRenderEnd(Window* window);
 void ImGuiDelete();
 
 void GLClearError()
@@ -38,7 +38,7 @@ bool GLLogCall(const char* function, const char* file, int line)
 void TestLayer::OnAttach()
 {	
 	// ImGui
-	startImGui(((Layer*)this)->GetOwner()->GetWindow());
+	startImGui(m_Owner->GetWindow());
 	
 	// <------ TRIANGOLO ------>
 
@@ -182,7 +182,7 @@ void TestLayer::OnRender()
 	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 	m_ScreenShader->Unbind();
 	
-	ImGuiRenderEnd();
+	ImGuiRenderEnd(m_Owner->GetWindow());
 }
 
 void startImGui(Window* window)
@@ -253,17 +253,16 @@ void ImGuiDrawViewport(uint32_t colorAttachmentID)
 
 }
 
-void ImGuiRenderEnd()
+void ImGuiRenderEnd(Window* window)
 {
-	// TODO
-	// ImGuiIO& io = ImGui::GetIO();
-	// io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
+	// update display size
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize = ImVec2((float)window->GetWidth(), (float)window->GetHeight());
 
 	// Rendering
 	ImGui::Render();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		GLFWwindow* backup_current_context = glfwGetCurrentContext();

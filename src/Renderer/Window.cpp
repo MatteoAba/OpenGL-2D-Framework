@@ -26,7 +26,7 @@ Window::Window(Application* owner, WindowProperties properties)
 
     // events dispath
     glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
-        static_cast<Window*>(glfwGetWindowUserPointer(window))->WindowResize(width, height);
+        //static_cast<Window*>(glfwGetWindowUserPointer(window))->WindowResize(width, height);
     });
     glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
         static_cast<Window*>(glfwGetWindowUserPointer(window))->KeybordButton(key, action);

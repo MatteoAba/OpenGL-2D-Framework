@@ -76,7 +76,7 @@ void TestLayer::OnAttach()
 	// creo il color attachment
 	glGenTextures(1, &m_TCB);
 	glBindTexture(GL_TEXTURE_2D, m_TCB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Owner->GetWindow()->GetWidth(), m_Owner->GetWindow()->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_TCB, 0);
@@ -84,7 +84,7 @@ void TestLayer::OnAttach()
 	// creo il renderbuffer per il depth e stencil attachment
 	glGenRenderbuffers(1, &m_RBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);                 // 24 bit per depth e 8 bit per stencil
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Owner->GetWindow()->GetWidth(), m_Owner->GetWindow()->GetHeight());                 // 24 bit per depth e 8 bit per stencil
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
 
 	// controllo se il frame buffer è completo
@@ -176,11 +176,11 @@ void TestLayer::OnRender()
 	//ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ 640, 480 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 	// rendering del piano
-	m_ScreenShader->Bind();
-	GLCall(glBindVertexArray(m_VAO_Screen));
-	GLCall(glBindTexture(GL_TEXTURE_2D, m_TCB));
-	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
-	m_ScreenShader->Unbind();
+	// m_ScreenShader->Bind();
+	// GLCall(glBindVertexArray(m_VAO_Screen));
+	// GLCall(glBindTexture(GL_TEXTURE_2D, m_TCB));
+	// GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+	// m_ScreenShader->Unbind();
 	
 	ImGuiRenderEnd(m_Owner->GetWindow());
 }

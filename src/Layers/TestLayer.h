@@ -3,10 +3,6 @@
 #include "../Core/Layer.h"
 #include "../Renderer/Shader.h"
 
-// TODO prendila dalla window (che va aggiornata acnhe con gli eventi)
-#define SCR_WIDTH 640
-#define SCR_HEIGHT 480
-
 class TestLayer : public Layer
 {
 public:

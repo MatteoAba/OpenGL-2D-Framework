@@ -19,7 +19,7 @@ public:
 	virtual void OnRender() override;
 
 private:
-	uint32_t m_VAO, m_VBO, m_VAO_Screen, m_VBO_Screen;
+	uint32_t m_VAO, m_VBO, m_IBO, m_VAO_Screen, m_VBO_Screen;
 	uint32_t m_FBO, m_TCB, m_RBO;
 	Shader *m_Shader, *m_ScreenShader;
 	bool m_Show_demo_window;

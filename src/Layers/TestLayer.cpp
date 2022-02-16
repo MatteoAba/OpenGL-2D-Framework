@@ -50,13 +50,25 @@ void TestLayer::OnAttach()
 		// positions            // colors
 		 0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
 		-0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,
-		 0.0f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f 
+		-0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,
+		 0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f
 	};
 
 	// vertex buffer
 	GLCall(glGenBuffers(1, &m_VBO));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
 	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
+
+	// indices
+	uint32_t indices[] = {
+		0, 1, 2,
+		3, 0, 2
+	};
+
+	// index buffer
+	GLCall(glGenBuffers(1, &m_IBO));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
 	// vertex array
 	GLCall(glGenVertexArrays(1, &m_VAO));
@@ -166,7 +178,8 @@ void TestLayer::OnRender()
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	GLCall(glBindVertexArray(m_VAO));
-	GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO));
+	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 	m_Shader->Unbind();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

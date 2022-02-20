@@ -26,13 +26,14 @@ VertexArray::~VertexArray()
 	glBindVertexArray(m_RendererID);
 }
 
-void VertexArray::AddBuffer(VertexLayout layout)
+void VertexArray::AddBuffer(VertexLayout layout, VertexBuffer& vbo)
 {
 	uint32_t stride = layout.GetStride();
 	uint32_t index = 0;
 	uint64_t offset = 0;
 
 	Bind();
+	vbo.Bind();
 
 	std::vector<VertexInfo> vertex = layout.GetVertex();
 	for (auto group : vertex) {

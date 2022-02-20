@@ -25,11 +25,11 @@ void TestLayer::OnAttach()
 
 	// vertices
 	float vertices[] = {
-		// positions            // colors
-		 0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,
-		 0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f
+		// positions            // colors			// coordinate texture
+		 0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 1.0f,		// right - up
+		 0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	1.0f, 0.0f,		// right - down	
+		-0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 0.0f,		// left  - down
+		-0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	0.0f, 1.0f		// left  - up
 	};
 
 	// vertex buffer
@@ -38,7 +38,7 @@ void TestLayer::OnAttach()
 	// indices
 	uint32_t indices[] = {
 		0, 1, 2,
-		3, 0, 2
+		2, 3, 0
 	};
 
 	// index buffer
@@ -49,7 +49,11 @@ void TestLayer::OnAttach()
 	VertexLayout layout;
 	layout.AddVertexGroup({ DataType::CGL_FLOAT, 3, false });
 	layout.AddVertexGroup({ DataType::CGL_FLOAT, 3, false });
-	m_VAO->AddBuffer(layout);
+	layout.AddVertexGroup({ DataType::CGL_FLOAT, 2, false });
+	m_VAO->AddBuffer(layout, *m_VBO);
+
+	// texture
+	m_Texture = new Texture("assets/Img/bricks.png");
 
 	// <------ FINE TRIANGOLO ------>
 
@@ -94,6 +98,9 @@ void TestLayer::OnDetach()
 	// deallocazione index buffer
 	delete m_IBO;
 
+	// deallocazione Texture
+	delete m_Texture;
+
 	// deallocazione framebuffer
 	glDeleteFramebuffers(1, &m_FBO);
 
@@ -120,6 +127,8 @@ void TestLayer::OnRender()
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_VAO->Bind();
 	m_IBO->Bind();
+	m_Texture->Bind(0);
+	m_Shader->SetInt("texture1", 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	m_Shader->Unbind();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

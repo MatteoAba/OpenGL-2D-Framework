@@ -103,6 +103,8 @@ set(PROJECT_SRC
     src/Renderer/VertexArray.h
     src/Renderer/VertexArray.cpp
     src/Renderer/Debug.h
+    src/Renderer/Texture.h
+    src/Renderer/Texture.cpp
 	
     # --- assets/Shader/
     assets/Shader/triangolo.vert

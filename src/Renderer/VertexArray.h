@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../cglph.h"
-#include <glad/glad.h>
+#include "Buffer.h"
 
 enum DataType
 {
@@ -76,7 +76,7 @@ public:
 	~VertexArray();
 	void Bind()   { glBindVertexArray(m_RendererID); }
 	void Unbind() { glBindVertexArray(0); }
-	void AddBuffer(VertexLayout layout);
+	void AddBuffer(VertexLayout layout, VertexBuffer& vbo);
 
 private:
 	uint32_t m_RendererID;

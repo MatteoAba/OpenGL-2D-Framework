@@ -2,8 +2,8 @@
 
 #include "../Core/Layer.h"
 #include "../Renderer/Shader.h"
-#include "../Renderer/Buffer.h"
 #include "../Renderer/VertexArray.h"
+#include "../Renderer/Texture.h"
 
 class TestLayer : public Layer
 {
@@ -26,5 +26,6 @@ private:
 	VertexArray* m_VAO;
 	uint32_t m_FBO, m_TCB, m_RBO;
 	Shader *m_Shader;
+	Texture* m_Texture;
 	bool m_Show_demo_window;
 };

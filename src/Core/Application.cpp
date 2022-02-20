@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stb_image.h>
-
 #include "Application.h"
 #include "Timer.h"
 #include "../Layers/TestLayer.h"
@@ -9,18 +7,20 @@
 Application::Application(int width, int height, const std::string& title)
     : m_LastFrame(0), m_TimeStep(0), m_Running(true)
 {
-    // creazione finestra
+    // window creation
     Log::Init();
     LOG_TRACE("Creazione finestra {}x{} e contesto OpenGL", width, height);
     m_Window = new Window(this, { width, height, title });
     m_Window->SetVSync(1);
 
-    // creazione layer stack
+    // layer stack creation
     m_LayerStack = new LayerStack(this);
 
-    // DA TOGLIERE
+    // TODO: move to renderer
     // glEnable(GL_DEPTH_TEST);
-    stbi_set_flip_vertically_on_load(true);
+    // blending mode
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 Application::~Application()
@@ -55,7 +55,7 @@ void Application::Run()
 
 void Application::OnEvent()
 {
-    // trasmetto gli eventi ai layer e svuoto la coda
+    // dispatch event to layers
     m_LayerStack->OnEvent(m_EventQueue);
     m_EventQueue.clear();
 }
@@ -67,13 +67,13 @@ void Application::OnUpdate()
 
 void Application::OnRender()
 {
-    // flush screen     TODO: da far fare al renderer
+    // flush screen     TODO: move to renderer
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_LayerStack->OnRender();
 
-    // swap buffer e gestione eventi I/O
+    // swap buffer and I/O events handing
     m_Window->ProcessEventBuffer();
 }

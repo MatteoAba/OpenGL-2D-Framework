@@ -58,6 +58,10 @@ Window::Window(Application* owner, WindowProperties properties)
     images[0].pixels = stbi_load("assets/Img/icon.png", &images[0].width, &images[0].height, 0, 4);
     glfwSetWindowIcon(m_Window, 1, images);
     stbi_image_free(images[0].pixels);
+
+    // anti aliasing
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    LOG_INFO("Anti-aliasing MSAA x4 attivato");
 }
 
 Window::~Window()

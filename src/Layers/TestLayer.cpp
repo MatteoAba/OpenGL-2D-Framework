@@ -55,33 +55,10 @@ void TestLayer::OnAttach()
 	// texture
 	m_Texture = new Texture("assets/Img/bricks.png");
 
+	// framebuffer
+	m_FBO = new Framebuffer(m_Owner, true);
+
 	// <------ FINE TRIANGOLO ------>
-
-	// <------ FRAMEBUFFER ------>
-
-	glGenFramebuffers(1, &m_FBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
-
-	// creo il color attachment
-	glGenTextures(1, &m_TCB);
-	glBindTexture(GL_TEXTURE_2D, m_TCB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Owner->GetWindow()->GetWidth(), m_Owner->GetWindow()->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_TCB, 0);
-
-	// creo il renderbuffer per il depth e stencil attachment
-	glGenRenderbuffers(1, &m_RBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Owner->GetWindow()->GetWidth(), m_Owner->GetWindow()->GetHeight());                 // 24 bit per depth e 8 bit per stencil
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
-
-	// controllo se il frame buffer è completo
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		LOG_ERROR("FRAMEBUFFER INCOMPLETO");
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// <------ FINE FRAMEBUFFER ------>
 }
 
 void TestLayer::OnDetach()
@@ -102,7 +79,7 @@ void TestLayer::OnDetach()
 	delete m_Texture;
 
 	// deallocazione framebuffer
-	glDeleteFramebuffers(1, &m_FBO);
+	delete m_FBO;
 
 	// deallocazione ImGui
 	ImGuiDelete();
@@ -121,7 +98,7 @@ void TestLayer::OnRender()
 	ImGuiRenderBegin(&m_Show_demo_window);
 
 	// rendering del triangolo nel Framebuffer
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+	m_FBO->Bind();
 	m_Shader->Bind();
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -131,10 +108,10 @@ void TestLayer::OnRender()
 	m_Shader->SetInt("texture1", 0);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	m_Shader->Unbind();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	m_FBO->Unbind();
 
-	// passo i dati del framebuffer a ImGui per il viewport
-	ImGuiDrawViewport(m_TCB);
+	// nel viewport renderizzo il color attachment del framebuffer
+	ImGuiDrawViewport(m_FBO->GetColorAttachment());
 	
 	ImGuiRenderEnd(m_Owner->GetWindow());
 }

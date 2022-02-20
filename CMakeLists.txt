@@ -105,6 +105,8 @@ set(PROJECT_SRC
     src/Renderer/Debug.h
     src/Renderer/Texture.h
     src/Renderer/Texture.cpp
+    src/Renderer/Framebuffer.h
+    src/Renderer/Framebuffer.cpp
 	
     # --- assets/Shader/
     assets/Shader/triangolo.vert

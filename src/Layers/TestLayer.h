@@ -4,6 +4,7 @@
 #include "../Renderer/Shader.h"
 #include "../Renderer/VertexArray.h"
 #include "../Renderer/Texture.h"
+#include "../Renderer/Framebuffer.h"
 
 class TestLayer : public Layer
 {
@@ -22,10 +23,10 @@ public:
 
 private:
 	VertexBuffer* m_VBO;
-	IndexBuffer* m_IBO;
-	VertexArray* m_VAO;
-	uint32_t m_FBO, m_TCB, m_RBO;
-	Shader *m_Shader;
+	IndexBuffer*  m_IBO;
+	VertexArray*  m_VAO;
+	Framebuffer*  m_FBO;
+	Shader*  m_Shader;
 	Texture* m_Texture;
 	bool m_Show_demo_window;
 };

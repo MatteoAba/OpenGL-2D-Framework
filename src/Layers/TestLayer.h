@@ -2,6 +2,8 @@
 
 #include "../Core/Layer.h"
 #include "../Renderer/Shader.h"
+#include "../Renderer/Buffer.h"
+#include "../Renderer/VertexArray.h"
 
 class TestLayer : public Layer
 {
@@ -19,8 +21,10 @@ public:
 	virtual void OnRender() override;
 
 private:
-	uint32_t m_VAO, m_VBO, m_IBO, m_VAO_Screen, m_VBO_Screen;
+	VertexBuffer* m_VBO;
+	IndexBuffer* m_IBO;
+	VertexArray* m_VAO;
 	uint32_t m_FBO, m_TCB, m_RBO;
-	Shader *m_Shader, *m_ScreenShader;
+	Shader *m_Shader;
 	bool m_Show_demo_window;
 };

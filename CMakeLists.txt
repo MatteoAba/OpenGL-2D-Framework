@@ -98,6 +98,11 @@ set(PROJECT_SRC
     src/Renderer/Window.cpp
     src/Renderer/Shader.h
     src/Renderer/Shader.cpp
+    src/Renderer/Buffer.h
+    src/Renderer/Buffer.cpp
+    src/Renderer/VertexArray.h
+    src/Renderer/VertexArray.cpp
+    src/Renderer/Debug.h
 	
     # --- assets/Shader/
     assets/Shader/triangolo.vert

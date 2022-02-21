@@ -16,7 +16,6 @@ void OrthographicCamera::TranslateCamera(glm::vec3 translation)
 void OrthographicCamera::ChangeProjection(float width, float height)
 {
 	float aspectRatio = width / height;
-	LOG_WARN("NEW PROJECTION {} {}", width, height);
 	m_Projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, 0.1f, 100.0f);
 }
 

@@ -107,6 +107,8 @@ set(PROJECT_SRC
     src/Renderer/Texture.cpp
     src/Renderer/Framebuffer.h
     src/Renderer/Framebuffer.cpp
+    src/Renderer/OrthographicCamera.h
+    src/Renderer/OrthographicCamera.cpp
 	
     # --- assets/Shader/
     assets/Shader/Quads.vert

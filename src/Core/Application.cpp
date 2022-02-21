@@ -4,7 +4,7 @@
 #include "Timer.h"
 #include "../Layers/TestLayer.h"
 
-Application::Application(int width, int height, const std::string& title)
+Application::Application(uint32_t width, uint32_t height, const std::string& title)
     : m_LastFrame(0), m_TimeStep(0), m_Running(true)
 {
     // window creation

@@ -10,7 +10,7 @@
 
 void startImGui(Window* window);
 void ImGuiRenderBegin(bool* show_demo_window, float* cameraSpeed);
-void ImGuiDrawViewport(uint32_t colorAttachmentID);
+void ImGuiDrawViewport(uint32_t colorAttachmentID, Window* window);
 void ImGuiRenderEnd(Window* window);
 void ImGuiDelete();
 
@@ -23,6 +23,12 @@ void TestLayer::OnAttach()
 {	
 	// ImGui
 	startImGui(m_Owner->GetWindow());
+
+	// camera e controller
+	float width = (float)(m_Owner->GetWindow()->GetViewportWidth());
+	float height = (float)(m_Owner->GetWindow()->GetViewportHeight());
+	m_Camera = new OrthographicCamera(width, height);
+	m_CameraController = new OrthographicCameraController(m_Camera);
 	
 	// <------ TRIANGOLO ------>
 
@@ -65,12 +71,6 @@ void TestLayer::OnAttach()
 	m_FBO = new Framebuffer(m_Owner, true);
 
 	// <------ FINE TRIANGOLO ------>
-
-	// camera e controller
-	float width  = (float)(m_Owner->GetWindow()->GetWidth());
-	float height = (float)(m_Owner->GetWindow()->GetHeight());
-	m_Camera = new OrthographicCamera(width, height);
-	m_CameraController = new OrthographicCameraController(m_Camera);
 }
 
 void TestLayer::OnDetach()
@@ -133,7 +133,7 @@ void TestLayer::OnRender()
 	m_FBO->Unbind();
 
 	// nel viewport renderizzo il color attachment del framebuffer
-	ImGuiDrawViewport(m_FBO->GetColorAttachment());
+	ImGuiDrawViewport(m_FBO->GetColorAttachment(), m_Owner->GetWindow());
 	
 	ImGuiRenderEnd(m_Owner->GetWindow());
 }
@@ -201,13 +201,16 @@ void ImGuiRenderBegin(bool* show_demo_window, float* cameraSpeed)
 	ImGui::ShowDemoWindow(show_demo_window);
 }
 
-void ImGuiDrawViewport(uint32_t colorAttachmentID)
+void ImGuiDrawViewport(uint32_t colorAttachmentID, Window* window)
 {
 
 	ImGui::Begin("Viewport");
 	{
 		ImVec2 wsize = ImGui::GetWindowSize();
 		ImGui::Image((ImTextureID)(uint64_t)colorAttachmentID, wsize, ImVec2(0, 1), ImVec2(1, 0));
+
+		// update viewport
+		window->UpdateViewport((uint32_t)wsize.x, (uint32_t)wsize.y);
 	}
 	ImGui::End();
 

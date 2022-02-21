@@ -2,7 +2,7 @@
 
 int main(void)
 {
-    Application app(640, 480, "Test");
+    Application app(1280, 720, "ChessGL");
     app.Inizialize();
     app.Run();
     

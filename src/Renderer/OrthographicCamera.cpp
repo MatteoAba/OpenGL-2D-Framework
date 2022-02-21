@@ -1,4 +1,5 @@
 #include "OrthographicCamera.h"
+#include "../Core/Log.h"
 
 OrthographicCamera::OrthographicCamera(float width, float height)
 	: m_View(glm::mat4(1.0f))
@@ -15,6 +16,7 @@ void OrthographicCamera::TranslateCamera(glm::vec3 translation)
 void OrthographicCamera::ChangeProjection(float width, float height)
 {
 	float aspectRatio = width / height;
+	LOG_WARN("NEW PROJECTION {} {}", width, height);
 	m_Projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, 0.1f, 100.0f);
 }
 
@@ -25,6 +27,7 @@ OrthographicCameraController::OrthographicCameraController(OrthographicCamera* c
 
 void OrthographicCameraController::OnEvent(Event e)
 {
+	// if a button is pressed the movement in that direction starts
 	if (e.GetType() == EventType::KEYBTN && e.GetStructure().Key.action == KeyEventType::PRESSED) {
 		switch (e.GetStructure().Key.button)
 		{
@@ -43,6 +46,7 @@ void OrthographicCameraController::OnEvent(Event e)
 		}
 	}
 
+	// if a button is released the movement in that direction stops
 	if (e.GetType() == EventType::KEYBTN && e.GetStructure().Key.action == KeyEventType::RELEASED) {
 		switch (e.GetStructure().Key.button)
 		{
@@ -60,6 +64,10 @@ void OrthographicCameraController::OnEvent(Event e)
 			break;
 		}
 	}
+
+	// if the viewport size change, the projection camera should be updated
+	if (e.GetType() == EventType::VIEWPORTRESIZE)
+		m_Camera->ChangeProjection((float)e.GetStructure().Resize.width, (float)e.GetStructure().Resize.height);
 }
 
 void OrthographicCameraController::OnUpdate(float ts)

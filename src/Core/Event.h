@@ -8,7 +8,8 @@ enum class EventType
     KEYBTN,
     MOUSEBTN,
     MOUSEPOS,
-    MOUSESCROLL
+    MOUSESCROLL,
+    VIEWPORTRESIZE
 };
 
 union EventStructure
@@ -36,6 +37,13 @@ union EventStructure
         uint16_t xOffset;
         uint16_t yOffset;
     } Scroll;
+
+    struct ViewportResize
+    {
+        uint32_t width;
+        uint32_t height;
+        uint8_t  viewportId;
+    } Resize;
 };
 
 class Event
@@ -45,6 +53,7 @@ public:
    Event(Keycode button, MouseEventType action);
    Event(uint32_t x, uint32_t y);
    Event(uint16_t xOffset, uint16_t yOffset);
+   Event(uint32_t width, uint32_t height, uint8_t id);
 
    void Print();
    inline EventType GetType() { return m_Type; }

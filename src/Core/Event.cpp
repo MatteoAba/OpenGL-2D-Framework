@@ -25,6 +25,12 @@ Event::Event(uint16_t xOffset, uint16_t yOffset)
 	m_Structure.Scroll = { xOffset, yOffset };
 }
 
+Event::Event(uint32_t width, uint32_t height, uint8_t id)
+	: m_Type(EventType::VIEWPORTRESIZE)
+{
+	m_Structure.Resize = { width, height, id };
+}
+
 void Event::Print()
 {
 	switch (m_Type)
@@ -40,6 +46,9 @@ void Event::Print()
 		break;
 	case EventType::MOUSESCROLL:
 		LOG_INFO("MOUSE SCROLL: {} {}", m_Structure.Scroll.xOffset, m_Structure.Scroll.yOffset);
+		break;
+	case EventType::VIEWPORTRESIZE:
+		LOG_INFO("VIEWPORT RESIZE: {} {} {}", m_Structure.Resize.width, m_Structure.Resize.height, m_Structure.Resize.viewportId);
 		break;
 	default:
 		LOG_WARN("EVENT TYPE UNKNOWN");

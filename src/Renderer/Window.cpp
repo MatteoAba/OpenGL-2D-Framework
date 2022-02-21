@@ -4,7 +4,7 @@
 #include <stb_image.h>
 
 Window::Window(Application* owner, WindowProperties properties)
-    : m_Owner(owner), m_Properties(properties.width, properties.height, properties.title)
+    : m_Owner(owner), m_Properties(properties.width, properties.height, properties.title), m_ViewportProperties(properties.width, properties.height), m_IsViewport(false)
 {
     // OpenGL initialization
     glfwInit();
@@ -24,9 +24,9 @@ Window::Window(Application* owner, WindowProperties properties)
     // set pointer to window, so it is reachable from the lamda function in glfw callback 
     glfwSetWindowUserPointer(m_Window, this);
 
-    // events dispath
+    // events dispatch
     glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
-        //static_cast<Window*>(glfwGetWindowUserPointer(window))->WindowResize(width, height);
+        static_cast<Window*>(glfwGetWindowUserPointer(window))->WindowResize(width, height);
     });
     glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
         static_cast<Window*>(glfwGetWindowUserPointer(window))->KeybordButton(key, action);
@@ -82,17 +82,38 @@ void Window::ProcessEventBuffer()
         m_Owner->SetRunning(false);
 }
 
-void Window::WindowResize(int width, int height)
+void Window::UpdateViewport(uint32_t width, uint32_t height)
+{
+    if (m_ViewportProperties.width != width || m_ViewportProperties.height != height)
+        ViewportResize(width, height);
+}
+
+void Window::WindowResize(uint32_t width, uint32_t height)
+{    
+    // update window properties
+    SetWidth(width);
+    SetHeight(height);
+
+    // update viewport if isn't in a ImGui Window
+    if (m_IsViewport)
+        ViewportResize(width, height);
+}
+
+void Window::ViewportResize(uint32_t width, uint32_t height)
 {
     // update viewport
     glViewport(0, 0, width, height);
 
-    // update window properties
-    SetWidth(width);
-    SetHeight(height);
+    // update viewport properties
+    SetViewportWidth(width);
+    SetViewportHeight(height);
+
+    // dispatch event
+    uint8_t id = 1;                         // for now there aren't multiple viewports
+    m_Owner->PushEvent({ width, height, id });
 }
 
-void Window::KeybordButton(int key, int action)
+void Window::KeybordButton(uint32_t key, uint32_t action)
 {
     // key W
     if (key == GLFW_KEY_W && action == GLFW_PRESS)
@@ -135,7 +156,7 @@ void Window::KeybordButton(int key, int action)
         m_Owner->PushEvent(Event(Keycode::KEY_ESC, KeyEventType::RELEASED));
 }
 
-void Window::MouseButton(int button, int action)
+void Window::MouseButton(uint32_t button, uint32_t action)
 {
     // mouse 1
     if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)

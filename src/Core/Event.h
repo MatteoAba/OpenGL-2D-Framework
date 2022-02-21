@@ -47,6 +47,8 @@ public:
    Event(uint16_t xOffset, uint16_t yOffset);
 
    void Print();
+   inline EventType GetType() { return m_Type; }
+   inline EventStructure GetStructure() { return m_Structure; }
 
 private:
     EventType m_Type;

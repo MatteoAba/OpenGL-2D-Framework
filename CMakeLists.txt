@@ -109,8 +109,8 @@ set(PROJECT_SRC
     src/Renderer/Framebuffer.cpp
 	
     # --- assets/Shader/
-    assets/Shader/triangolo.vert
-    assets/Shader/triangolo.frag
+    assets/Shader/Quads.vert
+    assets/Shader/Quads.frag
     assets/Shader/TextureOnQuad.vert
     assets/Shader/TextureOnQuad.frag
     

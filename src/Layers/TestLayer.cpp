@@ -1,4 +1,5 @@
 #include "../Core/Log.h"
+#include "../cglph.h"
 #include "TestLayer.h"
 
 #include <imgui.h>
@@ -8,10 +9,15 @@
 #include "../Core/Application.h"
 
 void startImGui(Window* window);
-void ImGuiRenderBegin(bool* show_demo_window);
+void ImGuiRenderBegin(bool* show_demo_window, float* cameraSpeed);
 void ImGuiDrawViewport(uint32_t colorAttachmentID);
 void ImGuiRenderEnd(Window* window);
 void ImGuiDelete();
+
+TestLayer::TestLayer(std::string name, Application* owner)
+	: Layer(name, owner), m_Show_demo_window(true)
+{
+}
 
 void TestLayer::OnAttach()
 {	
@@ -21,7 +27,7 @@ void TestLayer::OnAttach()
 	// <------ TRIANGOLO ------>
 
 	// shader per il triangolo
-	m_Shader = new Shader("Quad", "assets/Shader/triangolo.vert", "assets/Shader/triangolo.frag");
+	m_Shader = new Shader("Quad", "assets/Shader/Quads.vert", "assets/Shader/Quads.frag");
 
 	// vertices
 	float vertices[] = {
@@ -59,6 +65,12 @@ void TestLayer::OnAttach()
 	m_FBO = new Framebuffer(m_Owner, true);
 
 	// <------ FINE TRIANGOLO ------>
+
+	// camera e controller
+	float width  = (float)(m_Owner->GetWindow()->GetWidth());
+	float height = (float)(m_Owner->GetWindow()->GetHeight());
+	m_Camera = new OrthographicCamera(width, height);
+	m_CameraController = new OrthographicCameraController(m_Camera);
 }
 
 void TestLayer::OnDetach()
@@ -81,23 +93,30 @@ void TestLayer::OnDetach()
 	// deallocazione framebuffer
 	delete m_FBO;
 
+	// deallocazione camera e controller
+	delete m_Camera;
+	delete m_CameraController;
+
 	// deallocazione ImGui
 	ImGuiDelete();
 }
 
 void TestLayer::OnEvent(Event e)
 {
+	m_CameraController->OnEvent(e);
 }
 
 void TestLayer::OnUpdate(float ts)
 {
+	m_CameraController->OnUpdate(ts);
 }
 
 void TestLayer::OnRender()
 {
-	ImGuiRenderBegin(&m_Show_demo_window);
+	ImGuiRenderBegin(&m_Show_demo_window, m_CameraController->GetSpeedPointer());
 
 	// rendering del triangolo nel Framebuffer
+	glm::mat4 model = glm::mat4(1.0f);
 	m_FBO->Bind();
 	m_Shader->Bind();
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -106,6 +125,9 @@ void TestLayer::OnRender()
 	m_IBO->Bind();
 	m_Texture->Bind(0);
 	m_Shader->SetInt("texture1", 0);
+	m_Shader->SetMat4("model", model);
+	m_Shader->SetMat4("view", m_Camera->GetView());
+	m_Shader->SetMat4("projection", m_Camera->GetProjection());
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	m_Shader->Unbind();
 	m_FBO->Unbind();
@@ -161,12 +183,19 @@ void startImGui(Window* window)
 	//IM_ASSERT(font != NULL);
 }
 
-void ImGuiRenderBegin(bool* show_demo_window)
+void ImGuiRenderBegin(bool* show_demo_window, float* cameraSpeed)
 {
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+
+	// controller for speed
+	ImGui::Begin("Settings");
+	{
+		ImGui::SliderFloat("Camera Speed", cameraSpeed, 0.0f, 50.0f);
+	}
+	ImGui::End();
 	
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	ImGui::ShowDemoWindow(show_demo_window);
@@ -178,7 +207,7 @@ void ImGuiDrawViewport(uint32_t colorAttachmentID)
 	ImGui::Begin("Viewport");
 	{
 		ImVec2 wsize = ImGui::GetWindowSize();
-		ImGui::Image((ImTextureID)colorAttachmentID, wsize, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((ImTextureID)(uint64_t)colorAttachmentID, wsize, ImVec2(0, 1), ImVec2(1, 0));
 	}
 	ImGui::End();
 

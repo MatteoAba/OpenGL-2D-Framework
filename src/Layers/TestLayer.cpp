@@ -1,18 +1,8 @@
-#include "../Core/Log.h"
-#include "../cglph.h"
 #include "TestLayer.h"
 
-#include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl3.h>
-
+#include "../cglph.h"
+#include "../Core/Log.h"
 #include "../Core/Application.h"
-
-void startImGui(Window* window);
-void ImGuiRenderBegin(bool* show_demo_window, float* cameraSpeed);
-void ImGuiDrawViewport(uint32_t colorAttachmentID, Window* window);
-void ImGuiRenderEnd(Window* window);
-void ImGuiDelete();
 
 TestLayer::TestLayer(std::string name, Application* owner)
 	: Layer(name, owner), m_Show_demo_window(true)
@@ -21,9 +11,6 @@ TestLayer::TestLayer(std::string name, Application* owner)
 
 void TestLayer::OnAttach()
 {	
-	// ImGui
-	startImGui(m_Owner->GetWindow());
-
 	// camera e controller
 	float width = (float)(m_Owner->GetWindow()->GetViewportWidth());
 	float height = (float)(m_Owner->GetWindow()->GetViewportHeight());
@@ -96,9 +83,6 @@ void TestLayer::OnDetach()
 	// deallocazione camera e controller
 	delete m_Camera;
 	delete m_CameraController;
-
-	// deallocazione ImGui
-	ImGuiDelete();
 }
 
 void TestLayer::OnEvent(Event e)
@@ -113,8 +97,6 @@ void TestLayer::OnUpdate(float ts)
 
 void TestLayer::OnRender()
 {
-	ImGuiRenderBegin(&m_Show_demo_window, m_CameraController->GetSpeedPointer());
-
 	// rendering del triangolo nel Framebuffer
 	glm::mat4 model = glm::mat4(1.0f);
 	m_FBO->Bind();
@@ -131,114 +113,24 @@ void TestLayer::OnRender()
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	m_Shader->Unbind();
 	m_FBO->Unbind();
-
-	// nel viewport renderizzo il color attachment del framebuffer
-	ImGuiDrawViewport(m_FBO->GetColorAttachment(), m_Owner->GetWindow());
-	
-	ImGuiRenderEnd(m_Owner->GetWindow());
 }
 
-void startImGui(Window* window)
+void TestLayer::OnImGuiRender()
 {
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-	//io.ConfigViewportsNoAutoMerge = true;
-	//io.ConfigViewportsNoTaskBarIcon = true;
-
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
-
-	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	ImGui::Begin("Viewport");
 	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		ImVec2 wsize = ImGui::GetWindowSize();
+		ImGui::Image((ImTextureID)(uint64_t)m_FBO->GetColorAttachment(), wsize, ImVec2(0, 1), ImVec2(1, 0));
+
+		// update viewport
+		m_Owner->GetWindow()->UpdateViewport((uint32_t)wsize.x, (uint32_t)wsize.y);
 	}
-
-	// Setup Platform/Renderer backends
-	ImGui_ImplGlfw_InitForOpenGL(window->GetNativeWindow(), true);
-	ImGui_ImplOpenGL3_Init("#version 440 core");
-
-	// Load Fonts
-	// - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-	// - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-	// - If the file cannot be loaded, the function will return NULL. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-	// - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-	// - Read 'docs/FONTS.md' for more instructions and details.
-	// - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-	//io.Fonts->AddFontDefault();
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
-	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
-	//IM_ASSERT(font != NULL);
-}
-
-void ImGuiRenderBegin(bool* show_demo_window, float* cameraSpeed)
-{
-	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
+	ImGui::End();
 
 	// controller for speed
 	ImGui::Begin("Settings");
 	{
-		ImGui::SliderFloat("Camera Speed", cameraSpeed, 0.0f, 50.0f);
+		ImGui::SliderFloat("Camera Speed", &m_CameraSpeed, 0.0f, 15.0f);
 	}
 	ImGui::End();
-	
-	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-	ImGui::ShowDemoWindow(show_demo_window);
-}
-
-void ImGuiDrawViewport(uint32_t colorAttachmentID, Window* window)
-{
-
-	ImGui::Begin("Viewport");
-	{
-		ImVec2 wsize = ImGui::GetWindowSize();
-		ImGui::Image((ImTextureID)(uint64_t)colorAttachmentID, wsize, ImVec2(0, 1), ImVec2(1, 0));
-
-		// update viewport
-		window->UpdateViewport((uint32_t)wsize.x, (uint32_t)wsize.y);
-	}
-	ImGui::End();
-
-}
-
-void ImGuiRenderEnd(Window* window)
-{
-	// update display size
-	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize = ImVec2((float)window->GetWidth(), (float)window->GetHeight());
-
-	// Rendering
-	ImGui::Render();
-
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		glfwMakeContextCurrent(backup_current_context);
-	}
-}
-
-void ImGuiDelete()
-{
-	// Cleanup
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
 }

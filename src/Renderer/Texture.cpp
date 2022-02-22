@@ -5,7 +5,7 @@
 Texture::Texture(const std::string& filePath)
 	: m_FilePath(filePath)
 {
-    LOG_TRACE("Carico la texture {}", filePath);
+    LOG_TRACE("Loading texture from {}", filePath);
 
     // texture generation
 	glGenTextures(1, &m_RendererID);
@@ -39,7 +39,7 @@ Texture::Texture(const std::string& filePath)
         // free RAM
         stbi_image_free(data);
     } else {
-        LOG_ERROR("Caricamento Texture a {} fallito", filePath);
+        LOG_ERROR("[{}] Texture loading failed", filePath);
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);

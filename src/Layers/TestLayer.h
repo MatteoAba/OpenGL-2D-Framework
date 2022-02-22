@@ -12,14 +12,15 @@ class TestLayer : public Layer
 public:
 	TestLayer(std::string name, Application* owner);
 
-	// creazione e distruzione
+	// creation and destruction in application
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 
-	// loop di funzionamento
+	// application loop behaviour
 	virtual void OnEvent(Event e) override;
 	virtual void OnUpdate(float ts) override;
 	virtual void OnRender() override;
+	virtual void OnImGuiRender() override;
 
 	float m_CameraSpeed = 10.0f;
 

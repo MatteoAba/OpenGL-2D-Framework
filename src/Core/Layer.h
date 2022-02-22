@@ -3,6 +3,10 @@
 #include "../cglph.h"
 #include "Event.h"
 
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 class Application;
 
 class Layer
@@ -22,6 +26,7 @@ public:
 	virtual void OnEvent(Event e) {};
 	virtual void OnUpdate(float ts) {};
 	virtual void OnRender() {};
+	virtual void OnImGuiRender() {};
 
 protected:
 	Application* m_Owner;

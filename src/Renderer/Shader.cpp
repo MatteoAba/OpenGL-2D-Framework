@@ -5,7 +5,7 @@
 Shader::Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
     : m_Name(name), m_VertexPath(vertexPath), m_FragmentPath(fragmentPath)
 {
-    LOG_TRACE("Carico lo shader a partire da: {} {}", vertexPath, fragmentPath);
+    LOG_TRACE("Loading shader from {} and {}", vertexPath, fragmentPath);
 
     // ricavo i sorgenti di vertex e fragment dai rispettivi file
     std::string vertexCode;
@@ -37,7 +37,7 @@ Shader::Shader(const std::string& name, const std::string& vertexPath, const std
     }
     catch (std::ifstream::failure& e) {
         // i file non sono stati letti
-        LOG_ERROR("Shader files non trovati");
+        LOG_ERROR("Shader files not found");
     }
 
     const char* vShaderCode = vertexCode.c_str();
@@ -93,7 +93,7 @@ void Shader::checkCompileErrors(uint32_t shader, const std::string& type)
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            LOG_ERROR("Compilazione del {} shader fallita", type);
+            LOG_ERROR("[{}] Shader compilation failed", type);
             LOG_ERROR("[INFO] : {}", infoLog);
         }
     }
@@ -101,7 +101,7 @@ void Shader::checkCompileErrors(uint32_t shader, const std::string& type)
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            LOG_ERROR("Linking del {} shader fallito", type);
+            LOG_ERROR("[{}] Shader linking fallito", type);
             LOG_ERROR("[INFO] : {}", infoLog);
         }
     }

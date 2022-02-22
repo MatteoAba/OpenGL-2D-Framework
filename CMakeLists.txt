@@ -90,6 +90,8 @@ set(PROJECT_SRC
     # --- src/Layers/
     src/Layers/TestLayer.h
     src/Layers/TestLayer.cpp
+    src/Layers/ImGuiLayer.h
+    src/Layers/ImGuiLayer.cpp
 
     # --- src/Renderer/
     src/Renderer/Renderer.h

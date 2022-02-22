@@ -2,6 +2,7 @@
 
 #include "Layer.h"
 #include "Event.h"
+#include "../Layers/ImGuiLayer.h"
 
 class Application;
 
@@ -11,7 +12,7 @@ public:
 	LayerStack(Application* owner);
 	~LayerStack();
 
-	// gestione layer
+	// laye management
 	void PushLayer(Layer* layer);
 	void RemoveLayer(Layer* layer);
 	void AddOverlay(Layer* layer);
@@ -23,6 +24,7 @@ public:
 	void OnRender();
 
 private:
+	ImGuiLayer* m_ImGuiLayer;
 	std::vector<Layer*> m_LayerStack;
 	Application* m_Owner;
 };

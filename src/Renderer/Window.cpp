@@ -15,7 +15,7 @@ Window::Window(Application* owner, WindowProperties properties)
     // window and context creation
     m_Window = glfwCreateWindow(properties.width, properties.height, properties.title.c_str(), NULL, NULL);
     if (m_Window == NULL) {
-        LOG_CRITICAL("Creazione dell'oggetto Window fallita!");
+        LOG_CRITICAL("Window creation failed");
         glfwTerminate();
         return;
     }
@@ -43,15 +43,15 @@ Window::Window(Application* owner, WindowProperties properties)
 
     // GLAD for OpenGL function
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        LOG_CRITICAL("Inizializzazione di GLAD fallita");
+        LOG_CRITICAL("GLAD inizialization failed");
         return;
     }
 
     // system log
-    LOG_INFO("Contesto OpenGL inizializzato correttamente");
+    LOG_INFO("OpenGL Context succesfully Initialized");
     LOG_INFO("Vendor: {}", glGetString(GL_VENDOR));
     LOG_INFO("Driver: {}", glGetString(GL_RENDERER));
-    LOG_INFO("Version OpenGL: {}", glGetString(GL_VERSION));
+    LOG_INFO("OpenGL Version: {}", glGetString(GL_VERSION));
 
     // set the icon
     GLFWimage images[1];
@@ -61,14 +61,14 @@ Window::Window(Application* owner, WindowProperties properties)
 
     // anti aliasing
     glfwWindowHint(GLFW_SAMPLES, 4);
-    LOG_INFO("Anti-aliasing MSAA x4 attivato");
+    LOG_INFO("Anti-aliasing MSAA x4 activated");
 }
 
 Window::~Window()
 {
-    LOG_TRACE("Eliminazione finestra");
+    LOG_TRACE("Removing Window");
     glfwTerminate();
-    LOG_INFO("Finestra eliminata correttamente");
+    LOG_INFO("Window succesfully removed");
 }
 
 void Window::ProcessEventBuffer()

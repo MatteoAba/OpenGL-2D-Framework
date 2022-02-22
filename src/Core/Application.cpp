@@ -9,7 +9,7 @@ Application::Application(uint32_t width, uint32_t height, const std::string& tit
 {
     // window creation
     Log::Init();
-    LOG_TRACE("Creazione finestra {}x{} e contesto OpenGL", width, height);
+    LOG_TRACE("Started creation of Window {}x{} and OpenGL context", width, height);
     m_Window = new Window(this, { width, height, title });
     m_Window->SetVSync(1);
 

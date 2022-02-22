@@ -58,10 +58,6 @@ Window::Window(Application* owner, WindowProperties properties)
     images[0].pixels = stbi_load("assets/Img/icon.png", &images[0].width, &images[0].height, 0, 4);
     glfwSetWindowIcon(m_Window, 1, images);
     stbi_image_free(images[0].pixels);
-
-    // anti aliasing
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    LOG_INFO("Anti-aliasing MSAA x4 activated");
 }
 
 Window::~Window()
@@ -80,6 +76,36 @@ void Window::ProcessEventBuffer()
     // check if the window should be closed
     if (glfwWindowShouldClose(m_Window))
         m_Owner->SetRunning(false);
+}
+
+void Window::SetVSync(uint32_t value)
+{
+    if (value == 1) {
+        glfwSwapInterval(1);
+        LOG_INFO("V-Sync activated");
+    }
+    else if (value) {
+        LOG_ERROR("Value {} for V-Sync is not supported", value);
+    }
+    else {
+        glfwSwapInterval(0);
+        LOG_WARN("V-Sync deactivated");
+    }
+}
+
+void Window::SetAntiAliasingMSAA(uint8_t samples)
+{
+    if (samples == 4) {
+        glfwWindowHint(GLFW_SAMPLES, 4);
+        LOG_INFO("Anti-aliasing MSAA x4 activated");
+    }
+    else if (samples) {
+        LOG_ERROR("Anti-aliasing MSAA x{} is not supported", samples);
+    }
+    else {
+        glfwWindowHint(GLFW_SAMPLES, 0);
+        LOG_WARN("Anti-aliasing MSAA deactivated");
+    }
 }
 
 void Window::UpdateViewport(uint32_t width, uint32_t height)

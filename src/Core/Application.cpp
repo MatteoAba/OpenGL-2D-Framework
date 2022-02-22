@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Timer.h"
 #include "../Layers/TestLayer.h"
+#include "../Renderer/Renderer.h"
 
 Application::Application(uint32_t width, uint32_t height, const std::string& title)
     : m_LastFrame(0), m_TimeStep(0), m_Running(true)
@@ -11,16 +12,14 @@ Application::Application(uint32_t width, uint32_t height, const std::string& tit
     Log::Init();
     LOG_TRACE("Started creation of Window {}x{} and OpenGL context", width, height);
     m_Window = new Window(this, { width, height, title });
-    m_Window->SetVSync(1);
 
     // layer stack creation
     m_LayerStack = new LayerStack(this);
 
-    // TODO: move to renderer
-    // glEnable(GL_DEPTH_TEST);
-    // blending mode
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // renderer inizialization
+    Renderer::Init(this);
+    Renderer::SetVSync(true);
+    Renderer::SetMSAA(false);
 }
 
 Application::~Application()
@@ -43,8 +42,11 @@ void Application::Run()
     {
         // update timestep
         float currentTime = m_Window->GetFrameTime();
+        if (currentTime - m_LastFrame < Renderer::GetMaxframetime())    // lock to max frametime
+            continue;
         m_TimeStep = currentTime - m_LastFrame;
         m_LastFrame = currentTime;
+        Renderer::SetFrameTime(m_TimeStep);
 
         // main loop function
         OnEvent();
@@ -55,6 +57,8 @@ void Application::Run()
 
 void Application::OnEvent()
 {
+    PROFILE_DURATION("Events");
+
     // dispatch event to layers
     m_LayerStack->OnEvent(m_EventQueue);
     m_EventQueue.clear();
@@ -62,16 +66,20 @@ void Application::OnEvent()
 
 void Application::OnUpdate()
 {
+    PROFILE_DURATION("Update");
+
     m_LayerStack->OnUpdate(m_TimeStep);
 }
 
 void Application::OnRender()
 {
-    // flush screen     TODO: move to renderer
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    PROFILE_DURATION("Render");
 
+    // flush screen
+    Renderer::SetClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    Renderer::ClearScreen();
+
+    // layers rendering
     m_LayerStack->OnRender();
 
     // swap buffer and I/O events handing

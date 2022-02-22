@@ -37,8 +37,9 @@ public:
 	inline GLFWwindow* GetWindow() { return m_Window; }
 	inline Application* GetOwner() { return m_Owner; }
 	inline float GetFrameTime() { return (float)glfwGetTime(); }
-	inline void SetVSync(uint32_t value) { glfwSwapInterval(value); }
+	void SetVSync(uint32_t value);
 	inline GLFWwindow* GetNativeWindow() { return m_Window; }
+	void SetAntiAliasingMSAA(uint8_t samples);
 
 	// setters and getters for windows properties
 	inline void SetWidth(uint32_t width)    { m_Properties.width = width; }

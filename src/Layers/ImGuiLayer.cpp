@@ -1,6 +1,7 @@
 #include "ImGuiLayer.h"
 
 #include "../Core/Application.h"
+#include "../Renderer/Renderer.h"
 
 ImGuiLayer::ImGuiLayer(std::string name, Application* owner)
 	: Layer(name, owner), m_OpenGLVersion("#version 440 core"), m_ShowDemo(true)
@@ -58,17 +59,78 @@ ImGuiLayer::~ImGuiLayer()
 
 void ImGuiLayer::Begin()
 {
-	// Start the Dear ImGui frame
+	// start ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
-	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+	// demo windows
 	ImGui::ShowDemoWindow(&m_ShowDemo);
 }
 
 void ImGuiLayer::End()
 {
+
+	// TODO: Layer->OnImGuiRender() here???
+
+	// utils for render options
+	bool vsync = Renderer::GetVSync();
+	const char* labels[] = { "Unlocked", "30", "60", "144", "240", "360" };
+	int selectedItems = 0;
+	if (Renderer::GetMaxframetime() == 1.0f / 30.0f)
+		selectedItems = 1;
+	else if (Renderer::GetMaxframetime() == 1.0f / 60.0f)
+		selectedItems = 2;
+	else if (Renderer::GetMaxframetime() == 1.0f / 144.0f)
+		selectedItems = 3;
+	else if (Renderer::GetMaxframetime() == 1.0f / 240.0f)
+		selectedItems = 4;
+	else if (Renderer::GetMaxframetime() == 1.0f / 360.0f)
+		selectedItems = 5;
+	int oldSelected = selectedItems;
+	bool msaa = Renderer::GetMSAA();
+
+	// render options
+ 	ImGui::Begin("Render Option");
+	{
+		// V-Sync
+		ImGui::Checkbox("V-Sync Enabled", &vsync);
+		if (vsync != Renderer::GetVSync())
+			Renderer::SetVSync(vsync);
+
+		// Framerate Limit
+		ImGui::Combo("Framerate Limit", &selectedItems, labels, IM_ARRAYSIZE(labels));
+		if (selectedItems != oldSelected) {
+			selectedItems = selectedItems ? atoi(labels[selectedItems]) : 0;
+			Renderer::SetMaxFramerate(selectedItems);
+		}
+
+		// V-Sync
+		ImGui::Checkbox("MSAAx4 Enabled", &msaa);
+		if (msaa != Renderer::GetMSAA())
+			Renderer::SetMSAA(msaa);
+	}
+	ImGui::End();
+
+	// render statistics
+	RendererStats stats(Renderer::GetStats());
+	ImGui::Begin("Render Statistics");
+	{
+		// general stats
+		ImGui::Text("Frametime:   %.3fms", stats.frameTime * 1000);
+		ImGui::Text("Draw calls:   %d", stats.drawCall);
+		ImGui::Text("Framerate:   %.0ffps", 1.0f / stats.frameTime);
+		
+		ImGui::Separator();
+
+		// specific frame stats
+		ImGui::Text("Event  Time: %.3fms", stats.eventTime);
+		ImGui::Text("Update Time: %.3fms", stats.updateTime);
+		ImGui::Text("Render Time: %.3fms", stats.renderTime);
+	}
+	ImGui::End();
+	Renderer::SetDrawCall(0);
+	
 	// update display size
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2((float)m_Owner->GetWindow()->GetWidth(), (float)m_Owner->GetWindow()->GetHeight());

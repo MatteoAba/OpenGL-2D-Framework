@@ -22,8 +22,6 @@ public:
 	virtual void OnRender() override;
 	virtual void OnImGuiRender() override;
 
-	float m_CameraSpeed = 10.0f;
-
 private:
 	VertexBuffer* m_VBO;
 	IndexBuffer*  m_IBO;

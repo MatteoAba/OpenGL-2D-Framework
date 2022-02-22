@@ -2,6 +2,7 @@
 
 #include "../cglph.h"
 #include "Log.h"
+#include "../Renderer/Renderer.h"
 
 class Timer 
 {
@@ -15,7 +16,7 @@ private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> m_StartingTime;
 };
 
-// creandolo in una funzione stampa il tempo trascorso dalla sua creazione alla fine di quella funzione
+// log the time between its creation and the end of tits scope
 class ScopedTimer
 {
 public:
@@ -29,3 +30,30 @@ private:
 };
 
 #define LOG_DURATION(...)	ScopedTimer duration(__VA_ARGS__)
+
+// update render stats 
+class StatsTimer
+{
+public:
+	StatsTimer(const std::string& name)
+		: m_Name(name) {}
+	~StatsTimer() 
+	{ 
+		if (m_Name == "Frametime")
+			Renderer::SetFrameTime(m_Timer.MillisecondsElapsed());
+		if (m_Name == "Events")
+			Renderer::SetEventTime(m_Timer.MillisecondsElapsed());
+		else if (m_Name == "Update")
+			Renderer::SetUpdateTime(m_Timer.MillisecondsElapsed());
+		else if (m_Name == "Render")
+			Renderer::SetRenderTime(m_Timer.MillisecondsElapsed());
+		// else:
+			// sistem to put in ImGui automatically 
+	}
+
+private:
+	Timer m_Timer;
+	std::string m_Name;
+};
+
+#define PROFILE_DURATION(...)	StatsTimer duration(__VA_ARGS__)

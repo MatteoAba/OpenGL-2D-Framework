@@ -3,6 +3,7 @@
 #include "../cglph.h"
 #include "../Core/Log.h"
 #include "../Core/Application.h"
+#include "../Renderer/Renderer.h"
 
 TestLayer::TestLayer(std::string name, Application* owner)
 	: Layer(name, owner), m_Show_demo_window(true)
@@ -97,22 +98,18 @@ void TestLayer::OnUpdate(float ts)
 
 void TestLayer::OnRender()
 {
-	// rendering del triangolo nel Framebuffer
+	// quad position
 	glm::mat4 model = glm::mat4(1.0f);
-	m_FBO->Bind();
-	m_Shader->Bind();
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	m_VAO->Bind();
-	m_IBO->Bind();
+	
+	// quad uniforms
 	m_Texture->Bind(0);
 	m_Shader->SetInt("texture1", 0);
 	m_Shader->SetMat4("model", model);
 	m_Shader->SetMat4("view", m_Camera->GetView());
 	m_Shader->SetMat4("projection", m_Camera->GetProjection());
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	m_Shader->Unbind();
-	m_FBO->Unbind();
+
+	// rendering
+	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
 }
 
 void TestLayer::OnImGuiRender()
@@ -130,7 +127,7 @@ void TestLayer::OnImGuiRender()
 	// controller for speed
 	ImGui::Begin("Settings");
 	{
-		ImGui::SliderFloat("Camera Speed", &m_CameraSpeed, 0.0f, 15.0f);
+		ImGui::SliderFloat("Camera Speed", m_CameraController->GetSpeedPointer(), 0.0f, 15.0f);
 	}
 	ImGui::End();
 }

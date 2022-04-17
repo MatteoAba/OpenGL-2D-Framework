@@ -11,7 +11,7 @@ if(MSVC)
     add_compile_options(/W3)
     SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup")
 else()
-    add_compile_options(-W -Wall)
+    add_compile_options(-Wall)
 endif()
 
 # opzioni output
@@ -28,7 +28,7 @@ include_directories(${OPENGL_INCLUDE_DIRS})
 # GLFW da submodule
 set(GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only")
 set(GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only")
-add_subdirectory("vendor/GLFW")
+add_subdirectory("vendor/glfw")
 
 # Glad da cartella
 add_library(Glad STATIC "vendor/Glad/src/glad.c")

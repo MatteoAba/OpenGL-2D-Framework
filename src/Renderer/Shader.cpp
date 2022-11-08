@@ -149,7 +149,7 @@ void Shader::SetMat3(const std::string& name, glm::mat3& matrix)
     glUniformMatrix3fv(location, 1, GL_FALSE, &matrix[0][0]);
 }
 
-void Shader::SetMat4(const std::string& name, glm::mat4& matrix)
+void Shader::SetMat4(const std::string& name, const glm::mat4& matrix)
 {
     GLint location = glGetUniformLocation(m_ShaderID, name.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);

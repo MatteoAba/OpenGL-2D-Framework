@@ -64,6 +64,7 @@ void ImGuiLayer::Begin()
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
+	// main window
 	#ifdef IMGUI_HAS_VIEWPORT
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -146,7 +147,7 @@ void ImGuiLayer::End()
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2((float)m_Owner->GetWindow()->GetWidth(), (float)m_Owner->GetWindow()->GetHeight());
 
-	// test
+	// close main window
 	ImGui::End();
 
 	// Rendering

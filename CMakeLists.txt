@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
-# rimozione build target inutili
+# remove useless build target
 set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE)
 
-# nome progetto
+# project name
 project(ChessGL)
 
-# opzioni di compilazione
+# compile options
 if(MSVC)
     add_compile_options(/W3)
     SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup")
@@ -14,36 +14,36 @@ else()
     add_compile_options(-Wall)
 endif()
 
-# opzioni output
+# output options
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin-int)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-# ---------- esterni -----------
+# --------- external ----------
 
-# OpenGL da sistema
+# OpenGL from system
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
 
-# GLFW da submodule
+# GLFW from submodule
 set(GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only")
 set(GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only")
 add_subdirectory("vendor/glfw")
 
-# Glad da cartella
+# Glad from directory
 add_library(Glad STATIC "vendor/Glad/src/glad.c")
 target_include_directories(Glad PUBLIC "vendor/Glad/include")
 
-# stb_image da cartella
+# stb_image from directory
 add_library(stb_image STATIC "vendor/stb_image/stb_image.cpp")
 target_include_directories(stb_image PUBLIC "vendor/stb_image")
 
-# glm, spdlog e freetype da submodule
+# glm, spdlog and freetype from submodule
 add_subdirectory("vendor/glm")
 add_subdirectory("vendor/spdlog")
 add_subdirectory("vendor/freetype")
 
-# imgui da cartella
+# imgui from directory
 add_library(imgui STATIC 
         "vendor/imgui/imconfig.h"
 		"vendor/imgui/imgui.h"
@@ -63,9 +63,9 @@ add_library(imgui STATIC
 )
 target_include_directories(imgui PUBLIC "vendor/imgui" "vendor/imgui/backends" "vendor/glfw/include")
 
-# ------------------------------
+# -----------------------------
 
-# ---------- progetto ----------
+# ---------- project ----------
 
 set(PREC_HEADER
 	src/cglph.h
@@ -91,8 +91,6 @@ set(PROJECT_SRC
     # --- src/Layers/
     src/Layers/TestLayer.h
     src/Layers/TestLayer.cpp
-    src/Layers/TextTestLayer.h
-    src/Layers/TextTestLayer.cpp
     src/Layers/ImGuiLayer.h
     src/Layers/ImGuiLayer.cpp
 
@@ -114,6 +112,8 @@ set(PROJECT_SRC
     src/Renderer/Framebuffer.cpp
     src/Renderer/OrthographicCamera.h
     src/Renderer/OrthographicCamera.cpp
+    src/Renderer/Text.h
+    src/Renderer/Text.cpp
 	
     # --- assets/Shader/
     assets/Shader/Quads.vert
@@ -126,7 +126,7 @@ set(PROJECT_SRC
     ${PREC_HEADER}
 )
 
-# ricreo la struttura dei file per visual studio
+# recreate the files structure for visual studio
 source_group(src "src")
 source_group(src/Core "src/Core")
 source_group(src/Layers "src/Layers")
@@ -138,7 +138,7 @@ target_include_directories(ChessGL PRIVATE "vendor/Glad/include" "vendor/glm" "v
 target_link_libraries(ChessGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog imgui freetype)	                                            # librerie da linkare
 #target_precompile_headers(ChessGL PRIVATE ${PREC_HEADER})                                                                                      # precompiled headers
 
-# copio le risorse (shader, media, ecc..) nella cartella dell'eseguibile
+# copy resources (shader, media, ecc..) in the output folder
 if (MSVC)
     file(COPY "assets" DESTINATION ${CMAKE_SOURCE_DIR}/bin/Debug)
     file(COPY "assets" DESTINATION ${CMAKE_SOURCE_DIR}/bin/Release)
@@ -147,7 +147,7 @@ else()
     file(COPY "assets" DESTINATION ${CMAKE_SOURCE_DIR}/bin)
 endif()
 
-# in Visual Studio setto il progetto come Start Up Project
+# in Visual Studio setup project as Start Up Project
 if (MSVC)
     if (${CMAKE_VERSION} VERSION_LESS "3.6.0") 
         message("\n\t[ WARNING ]\n\n\tCMake version lower than 3.6.\n\n\t - Please update CMake and rerun; OR\n\t - Manually set 'ChessGL' as StartUp Project in Visual Studio.\n")

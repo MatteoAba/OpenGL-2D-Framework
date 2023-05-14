@@ -93,13 +93,34 @@ void Renderer::ClearScreen()
 		glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void Renderer::DrawQuad(VertexArray* VAO, Shader* Shader, Framebuffer* FBO)
+{
+	// framebuffer binding
+	// if (FBO)
+		// FBO->Bind();
+	
+	// buffers binding
+	Shader->Bind();
+	VAO->Bind();
+
+	// draw call
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	Renderer::IncrementDrawCall();
+
+	// unbinding
+	Shader->Unbind(); 
+	VAO->Unbind();
+	
+	// binding default framebuffer
+	// if (FBO)
+		// FBO->Unbind();
+}
+
 void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO)
 {
 	// framebuffer binding
-	if (FBO) {
-		FBO->Bind();
-		Renderer::ClearScreen();
-	}
+	// if (FBO)
+	//	FBO->Bind();
 	
 	// buffers binding
 	Shader->Bind();
@@ -116,6 +137,6 @@ void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Fram
 	IBO->Unbind();
 	
 	// binding default framebuffer
-	if (FBO)
-		FBO->Unbind();
+	// if (FBO)
+		// FBO->Unbind();
 }

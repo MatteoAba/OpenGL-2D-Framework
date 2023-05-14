@@ -7,9 +7,11 @@ class VertexBuffer
 {
 public:
 	VertexBuffer(const void* data, uint32_t size);
+	VertexBuffer(uint32_t size);
 	~VertexBuffer();
 	void Bind()	  { glBindBuffer(GL_ARRAY_BUFFER, m_RendererID); }
 	void Unbind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+	void SubmitData(const void* data, uint32_t size);
 
 private:
 	uint32_t m_RendererID;

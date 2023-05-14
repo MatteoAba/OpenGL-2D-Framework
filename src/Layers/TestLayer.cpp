@@ -17,8 +17,13 @@ void TestLayer::OnAttach()
 	float height = (float)(m_Owner->GetWindow()->GetViewportHeight());
 	m_Camera = new OrthographicCamera(width, height);
 	m_CameraController = new OrthographicCameraController(m_Camera);
+
+	// text
+	m_Text = new Text("assets/Font/arial.ttf", m_Owner);
+	m_TextPosition = glm::vec2(48.0f, 48.0f * 2);
+	m_TextScale = 0.6f;
 	
-	// <------ TRIANGOLO ------>
+	// <-------- QUAD --------->
 
 	// shader per il triangolo
 	m_Shader = new Shader("Quad", "assets/Shader/Quads.vert", "assets/Shader/Quads.frag");
@@ -58,11 +63,14 @@ void TestLayer::OnAttach()
 	// framebuffer
 	m_FBO = new Framebuffer(m_Owner, true);
 
-	// <------ FINE TRIANGOLO ------>
+	// <------ FINE QUAD ------>
 }
 
 void TestLayer::OnDetach()
 {
+	// deallocazione text
+	delete m_Text;
+
 	// deallocazione shader
 	delete m_Shader;
 
@@ -98,6 +106,14 @@ void TestLayer::OnUpdate(float ts)
 
 void TestLayer::OnRender()
 {
+	m_FBO->Bind();
+	Renderer::ClearScreen();
+
+	// text rendering
+	m_Text->RenderText("Sono un fallito", m_TextPosition, m_TextScale, glm::vec3(1.0f, 0.0f, 0.0f), m_FBO);
+	m_Text->RenderText("Deh", m_TextPosition + glm::vec2(0.0f, 48.0f), m_TextScale, glm::vec3(1.0f, 1.0f, 0.0f), m_FBO);
+	m_Text->RenderText("Cristo ha deciso che i due quadrati non devono essere mostrati", m_TextPosition + glm::vec2(0.0f, -48.0f), m_TextScale, glm::vec3(0.71f, 0.40f, 0.11f), m_FBO);
+	
 	// quad position
 	glm::mat4 model = glm::mat4(1.0f);
 	
@@ -108,8 +124,16 @@ void TestLayer::OnRender()
 	m_Shader->SetMat4("view", m_Camera->GetView());
 	m_Shader->SetMat4("projection", m_Camera->GetProjection());
 
-	// rendering
+	// quad 1 rendering
 	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
+
+	// quad 2 rendering
+	m_Shader->Bind();
+	model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	m_Shader->SetMat4("model", model);
+	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
+
+	m_FBO->Unbind();
 }
 
 void TestLayer::OnImGuiRender()

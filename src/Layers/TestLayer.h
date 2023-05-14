@@ -6,6 +6,7 @@
 #include "../Renderer/Texture.h"
 #include "../Renderer/Framebuffer.h"
 #include "../Renderer/OrthographicCamera.h"
+#include "../Renderer/Text.h"
 
 class TestLayer : public Layer
 {
@@ -32,4 +33,9 @@ private:
 	OrthographicCamera* m_Camera;
 	OrthographicCameraController* m_CameraController;
 	bool m_Show_demo_window;
+
+	// text
+	Text* m_Text;
+	glm::vec2 m_TextPosition;
+	float m_TextScale;
 };

@@ -38,9 +38,10 @@ target_include_directories(Glad PUBLIC "vendor/Glad/include")
 add_library(stb_image STATIC "vendor/stb_image/stb_image.cpp")
 target_include_directories(stb_image PUBLIC "vendor/stb_image")
 
-# glm e spdlog da submodule
+# glm, spdlog e freetype da submodule
 add_subdirectory("vendor/glm")
 add_subdirectory("vendor/spdlog")
+add_subdirectory("vendor/freetype")
 
 # imgui da cartella
 add_library(imgui STATIC 
@@ -90,6 +91,8 @@ set(PROJECT_SRC
     # --- src/Layers/
     src/Layers/TestLayer.h
     src/Layers/TestLayer.cpp
+    src/Layers/TextTestLayer.h
+    src/Layers/TextTestLayer.cpp
     src/Layers/ImGuiLayer.h
     src/Layers/ImGuiLayer.cpp
 
@@ -115,6 +118,8 @@ set(PROJECT_SRC
     # --- assets/Shader/
     assets/Shader/Quads.vert
     assets/Shader/Quads.frag
+    assets/Shader/Text.vert
+    assets/Shader/Text.frag
     assets/Shader/TextureOnQuad.vert
     assets/Shader/TextureOnQuad.frag
     
@@ -129,9 +134,9 @@ source_group(src/Renderer "src/Renderer")
 source_group(shader "assets/Shader")
  
 add_executable(ChessGL ${PROJECT_SRC})
-target_include_directories(ChessGL PRIVATE "vendor/Glad/include" "vendor/glm" "vendor/stb_image" "vendor/imgui")        # cartelle da includere
-target_link_libraries(ChessGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog imgui)	                                # librerie da linkare
-#target_precompile_headers(ChessGL PRIVATE ${PREC_HEADER})                                                              # precompiled headers
+target_include_directories(ChessGL PRIVATE "vendor/Glad/include" "vendor/glm" "vendor/stb_image" "vendor/imgui" "vendor/freetype/include")      # cartelle da includere
+target_link_libraries(ChessGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog imgui freetype)	                                            # librerie da linkare
+#target_precompile_headers(ChessGL PRIVATE ${PREC_HEADER})                                                                                      # precompiled headers
 
 # copio le risorse (shader, media, ecc..) nella cartella dell'eseguibile
 if (MSVC)

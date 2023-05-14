@@ -61,7 +61,7 @@ public:
 	VertexLayout();
 	~VertexLayout();
 	void AddVertexGroup(VertexInfo group);
-	uint32_t GetStride() { return m_Stride; }
+	inline uint32_t GetStride() const { return m_Stride; }
 	const std::vector<VertexInfo>& GetVertex() { return m_Vertex; }
 
 private:
@@ -74,8 +74,8 @@ class VertexArray
 public:
 	VertexArray();
 	~VertexArray();
-	void Bind()   { glBindVertexArray(m_RendererID); }
-	void Unbind() { glBindVertexArray(0); }
+	inline void Bind()   const { glBindVertexArray(m_RendererID); }
+	inline void Unbind() const { glBindVertexArray(0); }
 	void AddBuffer(VertexLayout layout, VertexBuffer& vbo);
 
 private:

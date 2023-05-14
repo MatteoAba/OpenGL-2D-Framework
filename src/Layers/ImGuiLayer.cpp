@@ -13,7 +13,7 @@ ImGuiLayer::ImGuiLayer(std::string name, Application* owner)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;      	// Enable Multi-Viewport / Platform Windows
 	//io.ConfigViewportsNoAutoMerge = true;
 	//io.ConfigViewportsNoTaskBarIcon = true;
 
@@ -64,13 +64,24 @@ void ImGuiLayer::Begin()
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
+	#ifdef IMGUI_HAS_VIEWPORT
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->WorkPos);
+	ImGui::SetNextWindowSize(viewport->WorkSize);
+	ImGui::SetNextWindowViewport(viewport->ID);
+	#else 
+	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+	#endif
+	// ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize);
+
 	// demo windows
-	ImGui::ShowDemoWindow(&m_ShowDemo);
+	// ImGui::ShowDemoWindow(&m_ShowDemo);
 }
 
 void ImGuiLayer::End()
 {
-
 	// TODO: Layer->OnImGuiRender() here???
 
 	// utils for render options
@@ -134,6 +145,9 @@ void ImGuiLayer::End()
 	// update display size
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2((float)m_Owner->GetWindow()->GetWidth(), (float)m_Owner->GetWindow()->GetHeight());
+
+	// test
+	ImGui::End();
 
 	// Rendering
 	ImGui::Render();

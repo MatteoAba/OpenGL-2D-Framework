@@ -96,8 +96,8 @@ void Renderer::ClearScreen()
 void Renderer::DrawQuad(VertexArray* VAO, Shader* Shader, Framebuffer* FBO)
 {
 	// framebuffer binding
-	// if (FBO)
-		// FBO->Bind();
+	if (FBO)
+		FBO->Bind();
 	
 	// buffers binding
 	Shader->Bind();
@@ -112,15 +112,15 @@ void Renderer::DrawQuad(VertexArray* VAO, Shader* Shader, Framebuffer* FBO)
 	VAO->Unbind();
 	
 	// binding default framebuffer
-	// if (FBO)
-		// FBO->Unbind();
+	if (FBO)
+		FBO->Unbind();
 }
 
 void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO)
 {
 	// framebuffer binding
-	// if (FBO)
-	//	FBO->Bind();
+	if (FBO)
+		FBO->Bind();
 	
 	// buffers binding
 	Shader->Bind();
@@ -137,6 +137,6 @@ void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Fram
 	IBO->Unbind();
 	
 	// binding default framebuffer
-	// if (FBO)
-		// FBO->Unbind();
+	if (FBO)
+		FBO->Unbind();
 }

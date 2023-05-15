@@ -6,7 +6,7 @@
 #include "../Renderer/Renderer.h"
 
 TestLayer::TestLayer(std::string name, Application* owner)
-	: Layer(name, owner), m_Show_demo_window(true)
+	: Layer(name, owner)
 {
 }
 
@@ -31,10 +31,10 @@ void TestLayer::OnAttach()
 	// vertices
 	float vertices[] = {
 		// positions            // colors			// coordinate texture
-		 0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 1.0f,		// right - up
-		 0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,	1.0f, 0.0f,		// right - down	
-		-0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,	0.0f, 0.0f,		// left  - down
-		-0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,	0.0f, 1.0f		// left  - up
+		200.0f, 200.0f, 0.0f,	0.0f, 1.0f, 0.0f,	1.0f, 1.0f,		// right - up
+		200.0f, 100.0f, 0.0f,   1.0f, 0.0f, 0.0f,	1.0f, 0.0f,		// right - down	
+		100.0f, 100.0f, 0.0f,   0.0f, 1.0f, 0.0f,	0.0f, 0.0f,		// left  - down
+		100.0f, 200.0f, 0.0f,   0.0f, 0.0f, 1.0f,	0.0f, 1.0f		// left  - up
 	};
 
 	// vertex buffer
@@ -106,34 +106,24 @@ void TestLayer::OnUpdate(float ts)
 
 void TestLayer::OnRender()
 {
+	// clear the framebuffer
 	m_FBO->Bind();
 	Renderer::ClearScreen();
+	m_FBO->Unbind();
+
+	// quad rendering
+	m_Texture->Bind(0);
+	m_Shader->Bind();
+	m_Shader->SetInt("texture1", 0);
+	m_Shader->SetMat4("model", glm::mat4(1.0f));
+	m_Shader->SetMat4("view", m_Camera->GetView());
+	m_Shader->SetMat4("projection", m_Camera->GetProjection());
+	m_Shader->Unbind();
+	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
 
 	// text rendering
 	m_Text->RenderText("Sono un fallito", m_TextPosition, m_TextScale, glm::vec3(1.0f, 0.0f, 0.0f), m_FBO);
 	m_Text->RenderText("Deh", m_TextPosition + glm::vec2(0.0f, 48.0f), m_TextScale, glm::vec3(1.0f, 1.0f, 0.0f), m_FBO);
-	m_Text->RenderText("Cristo ha deciso che i due quadrati non devono essere mostrati", m_TextPosition + glm::vec2(0.0f, -48.0f), m_TextScale, glm::vec3(0.71f, 0.40f, 0.11f), m_FBO);
-	
-	// quad position
-	glm::mat4 model = glm::mat4(1.0f);
-	
-	// quad uniforms
-	m_Texture->Bind(0);
-	m_Shader->SetInt("texture1", 0);
-	m_Shader->SetMat4("model", model);
-	m_Shader->SetMat4("view", m_Camera->GetView());
-	m_Shader->SetMat4("projection", m_Camera->GetProjection());
-
-	// quad 1 rendering
-	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
-
-	// quad 2 rendering
-	m_Shader->Bind();
-	model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	m_Shader->SetMat4("model", model);
-	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
-
-	m_FBO->Unbind();
 }
 
 void TestLayer::OnImGuiRender()
@@ -151,7 +141,7 @@ void TestLayer::OnImGuiRender()
 	// controller for speed
 	ImGui::Begin("Settings");
 	{
-		ImGui::SliderFloat("Camera Speed", m_CameraController->GetSpeedPointer(), 0.0f, 15.0f);
+		ImGui::SliderFloat("Camera Speed", m_CameraController->GetSpeedPointer(), 0.0f, 300.0f);
 	}
 	ImGui::End();
 }

@@ -4,7 +4,7 @@ Text::Text(const std::string& fontPath, Application* owner)
 	: m_Owner(owner)
 {
     // projection matrix setup
-    m_Projection = glm::ortho(0.0f, static_cast<float>(owner->GetWindow()->GetViewportWidth()), 0.0f, static_cast<float>(owner->GetWindow()->GetViewportHeight()));
+    m_Projection = glm::ortho(0.0f, static_cast<float>(owner->GetWindow()->GetViewportWidth()), 0.0f, static_cast<float>(owner->GetWindow()->GetViewportHeight()), -1.0f, 1.0f);
 
     // blending setup
     glEnable(GL_BLEND);

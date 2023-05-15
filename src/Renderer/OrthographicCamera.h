@@ -23,7 +23,7 @@ private:
 class OrthographicCameraController
 {
 public:
-	OrthographicCameraController(OrthographicCamera* camera, float cameraSpeed = 5.0f);
+	OrthographicCameraController(OrthographicCamera* camera, float cameraSpeed = 100.0f);
 	~OrthographicCameraController() {}
 	
 	void OnEvent(Event e);

@@ -32,7 +32,6 @@ private:
 	Texture* m_Texture;
 	OrthographicCamera* m_Camera;
 	OrthographicCameraController* m_CameraController;
-	bool m_Show_demo_window;
 
 	// text
 	Text* m_Text;

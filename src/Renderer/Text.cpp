@@ -112,9 +112,9 @@ void Text::RenderText(std::string text, glm::vec2 position, float scale, glm::ve
         m_VBO->Bind();
         m_VBO->SubmitData(vertices, sizeof(vertices));
         // projection matrix setup
-        m_Projection = glm::ortho(0.0f, static_cast<float>(m_Owner->GetWindow()->GetViewportWidth()), 0.0f, static_cast<float>(m_Owner->GetWindow()->GetViewportHeight()), -1.0f, 1.0f);
+        m_Projection = glm::ortho(0.0f, static_cast<float>(m_Owner->GetWindow()->GetViewportWidth()), 0.0f, static_cast<float>(m_Owner->GetWindow()->GetViewportHeight()), 0.1f, 100.0f);
         m_Shader->Bind();
-        m_Shader->SetMat4("u_Projection", m_Projection);
+        m_Shader->SetMat4("u_Projection", m_Projection * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f)));
         m_Shader->Unbind();
         Renderer::DrawQuad(m_VAO, m_Shader, FBO);
 

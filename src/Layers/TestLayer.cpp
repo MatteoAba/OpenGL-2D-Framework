@@ -30,11 +30,11 @@ void TestLayer::OnAttach()
 
 	// vertices
 	float vertices[] = {
-		// positions            // colors			// coordinate texture
-		200.0f, 200.0f, 0.0f,	0.0f, 1.0f, 0.0f,	1.0f, 1.0f,		// right - up
-		200.0f, 100.0f, 0.0f,   1.0f, 0.0f, 0.0f,	1.0f, 0.0f,		// right - down	
-		100.0f, 100.0f, 0.0f,   0.0f, 1.0f, 0.0f,	0.0f, 0.0f,		// left  - down
-		100.0f, 200.0f, 0.0f,   0.0f, 0.0f, 1.0f,	0.0f, 1.0f		// left  - up
+		// positions			// colors (RGB)			// coordinate texture
+		 0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f,		1.0f, 1.0f,		// right - up
+		 0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,		1.0f, 0.0f,		// right - down	
+		-0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,		0.0f, 0.0f,		// left  - down
+		-0.5f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f,		0.0f, 1.0f		// left  - up
 	};
 
 	// vertex buffer
@@ -112,18 +112,21 @@ void TestLayer::OnRender()
 	m_FBO->Unbind();
 
 	// quad rendering
+	glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3((float)m_Owner->GetWindow()->GetViewportWidth() / 2, (float)m_Owner->GetWindow()->GetViewportHeight() / 2, 0.0f));
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(400.0f, 400.0f, 1.0f));
+	glm::mat4 model = translation * scale;
 	m_Texture->Bind(0);
 	m_Shader->Bind();
 	m_Shader->SetInt("texture1", 0);
-	m_Shader->SetMat4("u_Model", glm::mat4(1.0f));
+	m_Shader->SetMat4("u_Model", model);
 	m_Shader->SetMat4("u_View", m_Camera->GetView());
 	m_Shader->SetMat4("u_Projection", m_Camera->GetProjection());
 	m_Shader->Unbind();
 	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
 
 	// text rendering
-	m_Text->RenderText("Sono un fallito", m_TextPosition, m_TextScale, glm::vec3(1.0f, 0.0f, 0.0f), m_FBO);
-	m_Text->RenderText("Deh", m_TextPosition + glm::vec2(0.0f, 48.0f), m_TextScale, glm::vec3(1.0f, 1.0f, 0.0f), m_FBO);
+	m_Text->RenderText("Text Red", m_TextPosition, m_TextScale, glm::vec3(1.0f, 0.0f, 0.0f), m_FBO);
+	m_Text->RenderText("Text Yellow", m_TextPosition + glm::vec2(0.0f, 48.0f), m_TextScale, glm::vec3(1.0f, 1.0f, 0.0f), m_FBO);
 }
 
 void TestLayer::OnImGuiRender()

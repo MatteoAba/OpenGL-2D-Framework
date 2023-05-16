@@ -4,7 +4,7 @@
 OrthographicCamera::OrthographicCamera(float width, float height)
 	: m_View(glm::mat4(1.0f))
 {
-	TranslateCamera(glm::vec3(0.0f, 0.0f, -0.5f));
+	TranslateCamera(glm::vec3(0.0f, 0.0f, -3.0f));
 	ChangeProjection(width, height);
 }
 
@@ -17,7 +17,7 @@ void OrthographicCamera::ChangeProjection(float width, float height)
 {
 	// float aspectRatio = width / height;
 	// m_Projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, 0.1f, 100.0f);
-	m_Projection = glm::ortho(0.0f, width, 0.0f, height, -1.0f, 1.0f);
+	m_Projection = glm::ortho(0.0f, width, 0.0f, height, 0.1f, 100.0f);
 }
 
 OrthographicCameraController::OrthographicCameraController(OrthographicCamera* camera, float cameraSpeed)

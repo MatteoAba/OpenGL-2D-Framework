@@ -1,9 +1,7 @@
 # To Do List
 
-* Add Font Rendering (Fix Width that depends on Viewport)
 * Optimize Quad Fragment Shader
-* Add Batch Rendering (Dynamic VBO/IBO + Vertex Structure + Quads Utility)
-* Disable ImGUI in Release Mode or with an Application Variable
+* Add Batch Rendering (Dynamic VBO/IBO + Vertex Structure + Quads Utility + Text Rendering Integration + Texture Atlas)
+* Disable ImGUI in Release Mode or with an Application Variable (move the FBO in the ImGui Layer)
 * Setup Initial ImGUI Viewport Size
-* Move ImGui Render Option in Test Layer
 * Audio System

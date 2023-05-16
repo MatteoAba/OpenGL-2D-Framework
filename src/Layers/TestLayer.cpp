@@ -63,7 +63,7 @@ void TestLayer::OnAttach()
 	// framebuffer
 	m_FBO = new Framebuffer(m_Owner, true);
 
-	// <------ FINE QUAD ------>
+	// <------ END QUAD ------>
 }
 
 void TestLayer::OnDetach()
@@ -115,9 +115,9 @@ void TestLayer::OnRender()
 	m_Texture->Bind(0);
 	m_Shader->Bind();
 	m_Shader->SetInt("texture1", 0);
-	m_Shader->SetMat4("model", glm::mat4(1.0f));
-	m_Shader->SetMat4("view", m_Camera->GetView());
-	m_Shader->SetMat4("projection", m_Camera->GetProjection());
+	m_Shader->SetMat4("u_Model", glm::mat4(1.0f));
+	m_Shader->SetMat4("u_View", m_Camera->GetView());
+	m_Shader->SetMat4("u_Projection", m_Camera->GetProjection());
 	m_Shader->Unbind();
 	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
 

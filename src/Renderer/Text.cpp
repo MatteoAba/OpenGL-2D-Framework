@@ -3,9 +3,6 @@
 Text::Text(const std::string& fontPath, Application* owner)
 	: m_Owner(owner)
 {
-    // projection matrix setup
-    m_Projection = glm::ortho(0.0f, static_cast<float>(owner->GetWindow()->GetViewportWidth()), 0.0f, static_cast<float>(owner->GetWindow()->GetViewportHeight()), -1.0f, 1.0f);
-
     // blending setup
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -69,8 +66,6 @@ Text::Text(const std::string& fontPath, Application* owner)
 
     // load the shader
     m_Shader = new Shader("Text", "assets/Shader/Text.vert", "assets/Shader/Text.frag");
-    m_Shader->Bind();
-    m_Shader->SetMat4("u_Projection", m_Projection);
 }
 
 Text::~Text()
@@ -116,6 +111,11 @@ void Text::RenderText(std::string text, glm::vec2 position, float scale, glm::ve
         m_VAO->Bind();
         m_VBO->Bind();
         m_VBO->SubmitData(vertices, sizeof(vertices));
+        // projection matrix setup
+        m_Projection = glm::ortho(0.0f, static_cast<float>(m_Owner->GetWindow()->GetViewportWidth()), 0.0f, static_cast<float>(m_Owner->GetWindow()->GetViewportHeight()), -1.0f, 1.0f);
+        m_Shader->Bind();
+        m_Shader->SetMat4("u_Projection", m_Projection);
+        m_Shader->Unbind();
         Renderer::DrawQuad(m_VAO, m_Shader, FBO);
 
         // move to the next glyph (1/64 pixel ahead)

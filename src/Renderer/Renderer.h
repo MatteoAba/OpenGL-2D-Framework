@@ -12,9 +12,10 @@ struct RendererStats
 	float updateTime;
 	float renderTime;
 	uint32_t drawCall;
+	uint32_t renderedQuad;
 
-	RendererStats(float v0, float v1, float v2, float v3, uint32_t v4)
-		: frameTime(v0), eventTime(v1), updateTime(v2), renderTime(v3), drawCall(v4) {}
+	RendererStats(float v0, float v1, float v2, float v3, uint32_t v4, uint32_t v5)
+		: frameTime(v0), eventTime(v1), updateTime(v2), renderTime(v3), drawCall(v4), renderedQuad(v5) {}
 };
 
 class Renderer
@@ -44,7 +45,9 @@ public:
 	static inline void SetUpdateTime(float value)  { m_RenderStats.updateTime = value; }
 	static inline void SetRenderTime(float value)  { m_RenderStats.renderTime = value; }
 	static inline void SetDrawCall(uint32_t value) { m_RenderStats.drawCall   = value; }
+	static inline void SetRenderedQuad(uint32_t value) { m_RenderStats.renderedQuad = value; }
 	static inline void IncrementDrawCall()         { ++m_RenderStats.drawCall; }
+	static inline void IncrementRenderedQuads(uint32_t value) { m_RenderStats.renderedQuad += value; }
 
 private:
 	static Application*  m_Owner;

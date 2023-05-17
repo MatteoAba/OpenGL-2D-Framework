@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 Application* Renderer::m_Owner = nullptr;
-RendererStats Renderer::m_RenderStats(0.0f, 0.0f, 0.0f, 0.0f, 0);
+RendererStats Renderer::m_RenderStats(0.0f, 0.0f, 0.0f, 0.0f, 0, 0);
 glm::vec4 Renderer::m_ClearColor = {0.0f, 0.0f, 0.0f, 1.0f};
 bool Renderer::m_Blendig = false;
 bool Renderer::m_DepthTesting = false;
@@ -106,6 +106,7 @@ void Renderer::DrawQuad(VertexArray* VAO, Shader* Shader, Framebuffer* FBO)
 	// draw call
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	Renderer::IncrementDrawCall();
+	Renderer::IncrementRenderedQuads(1);
 
 	// unbinding
 	Shader->Unbind(); 
@@ -130,6 +131,7 @@ void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Fram
 	// draw call
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	Renderer::IncrementDrawCall();
+	Renderer::IncrementRenderedQuads(1);
 
 	// unbinding
 	Shader->Unbind(); 

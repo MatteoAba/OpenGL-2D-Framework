@@ -129,9 +129,10 @@ void ImGuiLayer::End()
 	ImGui::Begin("Render Statistics");
 	{
 		// general stats
-		ImGui::Text("Frametime:   %.3fms", stats.frameTime * 1000);
-		ImGui::Text("Draw calls:   %d", stats.drawCall);
-		ImGui::Text("Framerate:   %.0ffps", 1.0f / stats.frameTime);
+		ImGui::Text("Frametime: %.3fms", stats.frameTime * 1000);
+		ImGui::Text("Draw calls: %d", stats.drawCall);
+		ImGui::Text("Number of quads: %d", stats.renderedQuad);
+		ImGui::Text("Framerate: %.0ffps", 1.0f / stats.frameTime);
 		
 		ImGui::Separator();
 
@@ -142,6 +143,7 @@ void ImGuiLayer::End()
 	}
 	ImGui::End();
 	Renderer::SetDrawCall(0);
+	Renderer::SetRenderedQuad(0);
 	
 	// update display size
 	ImGuiIO& io = ImGui::GetIO();

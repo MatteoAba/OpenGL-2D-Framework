@@ -1,5 +1,5 @@
 #include "Buffer.h"
-#include "../core/Log.h"
+#include "../Core/Log.h"
 
 VertexBuffer::VertexBuffer(const void* data, uint32_t size)
 {

@@ -25,7 +25,7 @@ Framebuffer::Framebuffer(Application* owner, bool createDepthAndStencil)
 
 	// check if framebuffer is complete
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		LOG_ERROR("Framebuffer incompleto");
+		LOG_ERROR("Framebuffer not complete");
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -56,7 +56,7 @@ void Framebuffer::Resize()
 
 		// check if new framebuffer is complete
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			LOG_ERROR("Framebuffer aggiornato incompleto");
+			LOG_ERROR("Updated framebuffer not complete");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

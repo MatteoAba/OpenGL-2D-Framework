@@ -2,8 +2,8 @@
 #include "../Core/Log.h"
 #include <glad/glad.h>
 
-Texture::Texture(const std::string& filePath)
-	: m_FilePath(filePath)
+Texture::Texture(const std::string& filePath, uint32_t texturePerRow, uint32_t texturePerColumn)
+	: m_FilePath(filePath), m_TexturePerRow(texturePerRow), m_TexturePerColumn(texturePerColumn)
 {
     LOG_TRACE("Loading texture from {}", filePath);
 
@@ -59,4 +59,22 @@ void Texture::Bind(uint32_t slot)
 void Texture::Unbind()
 {
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+glm::vec4 Texture::GetSubTextureCoordinates(uint32_t row, uint32_t column)
+{
+    // check if size are not defined
+    if (!m_TexturePerRow || !m_TexturePerColumn)
+        return glm::vec4({0.0f, 0.0f, 1.0f, 1.0f});           // x1, y1, x1 + wsize, y1 + hsize
+
+    // get the size of a sub texture
+    float subTextureWidth  = m_Width / m_TexturePerRow;
+    float subTextureHeight = m_Height / m_TexturePerColumn;
+
+    // get x1, y1 (left-up vertex coordinates)
+    float x1 = row * subTextureWidth / m_Width;
+    float y1 = column * subTextureHeight / m_Height;
+
+    return glm::vec4({x1, y1, x1 + subTextureWidth / m_Width, y1 + subTextureHeight / m_Height});
 }

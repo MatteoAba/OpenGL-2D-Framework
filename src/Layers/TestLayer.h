@@ -24,14 +24,15 @@ public:
 	virtual void OnImGuiRender() override;
 
 private:
-	VertexBuffer* m_VBO;
-	IndexBuffer*  m_IBO;
-	VertexArray*  m_VAO;
-	Framebuffer*  m_FBO;
-	Shader*  m_Shader;
-	Texture* m_Texture;
+	VertexBuffer *m_VBO, *m_AtlasVBO;
+	IndexBuffer* m_IBO;
+	VertexArray  *m_VAO, *m_AtlasVAO;
+	Framebuffer* m_FBO;
+	Shader* m_Shader;
+	Texture *m_Texture, *m_TextureAtlas;
 	OrthographicCamera* m_Camera;
 	OrthographicCameraController* m_CameraController;
+	uint32_t m_AtlasRow, m_AtlasColumn;
 
 	// text
 	Text* m_Text;

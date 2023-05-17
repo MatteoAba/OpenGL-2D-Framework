@@ -57,39 +57,40 @@ void TestLayer::OnAttach()
 	layout.AddVertexGroup({ DataType::CGL_FLOAT, 2, false });
 	m_VAO->AddBuffer(layout, *m_VBO);
 
-	// texture
+	// textures
 	m_Texture = new Texture("assets/Img/bricks.png");
+	m_TextureAtlas = new Texture("assets/Img/terrain_atlas.png", 32, 32);
 
 	// framebuffer
 	m_FBO = new Framebuffer(m_Owner, true);
+
+	// <------ END QUAD ------>
+
+	// <----- ATLAS QUAD ----->
+
+	m_AtlasRow = 0;
+	m_AtlasColumn = 0;
+
+	// buffers
+	m_AtlasVBO = new VertexBuffer(8 * 4 * sizeof(float));
+	m_AtlasVAO = new VertexArray();
+	m_AtlasVAO->AddBuffer(layout, *m_AtlasVBO);
 
 	// <------ END QUAD ------>
 }
 
 void TestLayer::OnDetach()
 {
-	// deallocazione text
 	delete m_Text;
-
-	// deallocazione shader
 	delete m_Shader;
-
-	// deallocazione vertex array
 	delete m_VAO;
-
-	// deallocazione vertex buffer
+	delete m_AtlasVAO;
 	delete m_VBO;
-
-	// deallocazione index buffer
+	delete m_AtlasVBO;
 	delete m_IBO;
-
-	// deallocazione Texture
 	delete m_Texture;
-
-	// deallocazione framebuffer
+	delete m_TextureAtlas;
 	delete m_FBO;
-
-	// deallocazione camera e controller
 	delete m_Camera;
 	delete m_CameraController;
 }
@@ -112,8 +113,8 @@ void TestLayer::OnRender()
 	m_FBO->Unbind();
 
 	// quad rendering
-	glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3((float)m_Owner->GetWindow()->GetViewportWidth() / 2, (float)m_Owner->GetWindow()->GetViewportHeight() / 2, 0.0f));
-	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(400.0f, 400.0f, 1.0f));
+	glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3((float)m_Owner->GetWindow()->GetViewportWidth() / 3, (float)m_Owner->GetWindow()->GetViewportHeight() / 2, 0.0f));
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(200.0f, 200.0f, 1.0f));
 	glm::mat4 model = translation * scale;
 	m_Texture->Bind(0);
 	m_Shader->Bind();
@@ -123,6 +124,29 @@ void TestLayer::OnRender()
 	m_Shader->SetMat4("u_Projection", m_Camera->GetProjection());
 	m_Shader->Unbind();
 	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
+
+	// atlas quad vertices
+	glm::vec4 textureCoords = m_TextureAtlas->GetSubTextureCoordinates(m_AtlasRow, m_AtlasColumn);
+	float vertices[] = {
+		 0.5f,  0.5f, 0.0f,		0.0f, 1.0f, 0.0f,		textureCoords[2], textureCoords[3],
+		 0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f,		textureCoords[2], textureCoords[1],	
+		-0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,		textureCoords[0], textureCoords[1],
+		-0.5f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f,		textureCoords[0], textureCoords[3]
+	};
+
+	// atlas quad rendering
+	m_AtlasVBO->SubmitData(vertices, sizeof(vertices));
+	translation = glm::translate(glm::mat4(1.0f), glm::vec3((float)m_Owner->GetWindow()->GetViewportWidth() * 2 / 3, (float)m_Owner->GetWindow()->GetViewportHeight() / 2, 0.0f));
+	scale = glm::scale(glm::mat4(1.0f), glm::vec3(32.0f, 32.0f, 1.0f));
+	model = translation * scale;
+	m_TextureAtlas->Bind(0);
+	m_Shader->Bind();
+	m_Shader->SetInt("texture1", 0);
+	m_Shader->SetMat4("u_Model", model);
+	m_Shader->SetMat4("u_View", m_Camera->GetView());
+	m_Shader->SetMat4("u_Projection", m_Camera->GetProjection());
+	m_Shader->Unbind();
+	Renderer::DrawQuad(m_AtlasVAO, m_IBO, m_Shader, m_FBO);
 
 	// text rendering
 	m_Text->RenderText("Text Red", m_TextPosition, m_TextScale, glm::vec3(1.0f, 0.0f, 0.0f), m_FBO);
@@ -145,6 +169,14 @@ void TestLayer::OnImGuiRender()
 	ImGui::Begin("Settings");
 	{
 		ImGui::SliderFloat("Camera Speed", m_CameraController->GetSpeedPointer(), 0.0f, 300.0f);
+	}
+	ImGui::End();
+
+	// controller for atlas
+	ImGui::Begin("Texture Selection");
+	{
+		ImGui::SliderInt("Texture Row", (int*)&m_AtlasRow, 0, 31);
+		ImGui::SliderInt("Texture Column", (int*)&m_AtlasColumn, 0, 31);
 	}
 	ImGui::End();
 }

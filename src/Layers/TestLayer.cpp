@@ -133,7 +133,7 @@ void TestLayer::OnImGuiRender()
 {
 	ImGui::Begin("Viewport");
 	{
-		ImVec2 wsize = ImGui::GetWindowSize();
+		ImVec2 wsize = ImGui::GetContentRegionAvail();
 		ImGui::Image((ImTextureID)(uint64_t)m_FBO->GetColorAttachment(), wsize, ImVec2(0, 1), ImVec2(1, 0));
 
 		// update viewport

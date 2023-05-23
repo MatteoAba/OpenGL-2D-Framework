@@ -18,35 +18,11 @@ struct RendererStats
 		: frameTime(v0), eventTime(v1), updateTime(v2), renderTime(v3), drawCall(v4), renderedQuad(v5) {}
 };
 
-struct Vec2 
-{ 
-	float x, y; 
-
-	Vec2(glm::vec2 coord) : 
-		x(coord[0]), y(coord[1]) {}
-};
-
-struct Vec3 
-{ 
-	float x, y, z; 
-
-	Vec3(glm::vec3 pos) : 
-		x(pos[0]), y(pos[1]), z(pos[2]) {}
-};
-
-struct Vec4 
-{ 
-	float r, g, b, a; 
-
-	Vec4(glm::vec4 col) : 
-		r(col[0]), g(col[1]), b(col[2]), a(col[3]) {}
-};
-
 struct Vertex2D
 {
-	Vec3 position;
-	Vec4 color;
-	Vec2 textureCoordinates;
+	glm::vec3 position;
+	glm::vec4 color;
+	glm::vec2 textureCoordinates;
 	float textureSlotID;
 
 	Vertex2D(glm::vec3 pos, glm::vec4 col, glm::vec2 texCoord, float texID)

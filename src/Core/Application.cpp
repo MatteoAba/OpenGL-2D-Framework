@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Timer.h"
 #include "../Layers/TestLayer.h"
+#include "../Layers/BatchRendererLayer.h"
 #include "../Renderer/Renderer.h"
 
 Application::Application(uint32_t width, uint32_t height, const std::string& title)
@@ -33,8 +34,9 @@ void Application::Inizialize()
     LOG_DURATION("Application Startup");
 
     // layers setup
-    Layer* test = new TestLayer("Test Layer", this);
-    m_LayerStack->PushLayer(test);
+    // Layer* test = new TestLayer("Test Layer", this);
+    Layer* batch = new BatchRendererLayer("Batch Renderer Layer", this);
+    m_LayerStack->PushLayer(batch);
 }
 
 void Application::Run()

@@ -93,6 +93,8 @@ set(PROJECT_SRC
     src/Layers/TestLayer.cpp
     src/Layers/ImGuiLayer.h
     src/Layers/ImGuiLayer.cpp
+    src/Layers/BatchRendererLayer.h
+    src/Layers/BatchRendererLayer.cpp
 
     # --- src/Renderer/
     src/Renderer/Renderer.h
@@ -122,6 +124,8 @@ set(PROJECT_SRC
     assets/Shader/Text.frag
     assets/Shader/TextureOnQuad.vert
     assets/Shader/TextureOnQuad.frag
+    assets/Shader/Vertex2D.vert
+    assets/Shader/Vertex2D.frag
     
     ${PREC_HEADER}
 )

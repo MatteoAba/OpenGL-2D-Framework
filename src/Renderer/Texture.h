@@ -6,6 +6,7 @@
 class Texture
 {
 public:
+	Texture(uint32_t color = 0xffffffff);
 	Texture(const std::string& filePath, uint32_t texturePerRow = 0, uint32_t texturePerColumn = 0);
 	~Texture();
 	void Bind(uint32_t slot = 0);

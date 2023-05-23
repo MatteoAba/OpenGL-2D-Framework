@@ -2,6 +2,22 @@
 #include "../Core/Log.h"
 #include <glad/glad.h>
 
+Texture::Texture(uint32_t color)
+{
+    // texture generation
+	glGenTextures(1, &m_RendererID);
+	glBindTexture(GL_TEXTURE_2D, m_RendererID);
+
+    // filter and fill strategy
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // single color 1x1 texture (by default is white)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &color);
+}
+
 Texture::Texture(const std::string& filePath, uint32_t texturePerRow, uint32_t texturePerColumn)
 	: m_FilePath(filePath), m_TexturePerRow(texturePerRow), m_TexturePerColumn(texturePerColumn)
 {

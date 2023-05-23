@@ -117,7 +117,7 @@ void Renderer::DrawQuad(VertexArray* VAO, Shader* Shader, Framebuffer* FBO)
 		FBO->Unbind();
 }
 
-void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO)
+void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO, uint32_t indicesCount)
 {
 	// framebuffer binding
 	if (FBO)
@@ -129,9 +129,9 @@ void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Fram
 	IBO->Bind();
 
 	// draw call
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
 	Renderer::IncrementDrawCall();
-	Renderer::IncrementRenderedQuads(1);
+	Renderer::IncrementRenderedQuads(indicesCount / 6);
 
 	// unbinding
 	Shader->Unbind(); 

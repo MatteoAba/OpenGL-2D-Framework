@@ -24,7 +24,6 @@ void VertexBuffer::SubmitData(const void* data, uint32_t size)
 {
 	Bind();
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-	const float* data_read = (const float*)data;
 }
 
 IndexBuffer::IndexBuffer(const void* data, uint32_t size)

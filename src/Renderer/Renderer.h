@@ -47,7 +47,7 @@ public:
 	static void SetClearColor(float r, float g, float b, float a);
 	static void ClearScreen();
 	static void DrawQuad(VertexArray* VAO, Shader* Shader, Framebuffer* FBO = nullptr);
-	static void DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO = nullptr);
+	static void DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO = nullptr, uint32_t indicesCount = 6);
 	
 	// statistics
 	static inline RendererStats GetStats() { return m_RenderStats; }

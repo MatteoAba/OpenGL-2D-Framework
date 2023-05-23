@@ -19,14 +19,8 @@ void BatchRendererLayer::OnAttach()
 	
 	// <-------- QUAD --------->
 
-    Vertex2D v0({ 0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, 2.0f);       // right - up
-    Vertex2D v1({ 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f }, 2.0f);       // right - down
-    Vertex2D v2({-0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f }, 2.0f);       // left  - down
-    Vertex2D v3({-0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, 2.0f);       // left  - up
-    Vertex2D vertices[] = { v0, v1, v2, v3 };
-
 	// vertex buffer
-	m_VBO = new VertexBuffer((void*)vertices, sizeof(vertices));
+	m_VBO = new VertexBuffer(4 * sizeof(Vertex2D));
 
 	// indices
 	uint32_t indices[] = {
@@ -58,6 +52,7 @@ void BatchRendererLayer::OnAttach()
         samplers[i] = i;
     m_Shader->Bind();
     m_Shader->SetIntArray("u_Textures", samplers, 32);
+	m_Shader->SetMat4("u_Model", glm::mat4(1.0f));
 	m_Shader->Unbind();
 
 	// framebuffer
@@ -96,15 +91,22 @@ void BatchRendererLayer::OnRender()
 	Renderer::ClearScreen();
 	m_FBO->Unbind();
 
-	// quad rendering
-	glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3((float)m_Owner->GetWindow()->GetViewportWidth() / 2, (float)m_Owner->GetWindow()->GetViewportHeight() / 2, 0.0f));
-	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(200.0f, 200.0f, 1.0f));
-	glm::mat4 model = translation * scale;
+	// quad submission
+	float x = (float)m_Owner->GetWindow()->GetViewportWidth()  / 2;
+	float y = (float)m_Owner->GetWindow()->GetViewportHeight() / 2; 
+	float halfScale = 100 / 2;
+	Vertex2D v0({ x + halfScale, y + halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, 2.0f);       // right - up
+    Vertex2D v1({ x + halfScale, y - halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f }, 2.0f);       // right - down
+    Vertex2D v2({ x - halfScale, y - halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f }, 2.0f);       // left  - down
+    Vertex2D v3({ x - halfScale, y + halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, 2.0f);       // left  - up
+    std::array<Vertex2D, 4> quad = { v0, v1, v2, v3 };
+	m_VBO->SubmitData(quad.data(), quad.size() * sizeof(Vertex2D));
+
+	// quads rendering
 	m_WhiteTexture->Bind(0);
 	m_BrickTexture->Bind(1);
 	m_IconTexture->Bind(2);
 	m_Shader->Bind();
-	m_Shader->SetMat4("u_Model", model);
 	m_Shader->SetMat4("u_View", m_Camera->GetView());
 	m_Shader->SetMat4("u_Projection", m_Camera->GetProjection());
 	m_Shader->Unbind();

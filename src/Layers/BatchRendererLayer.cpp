@@ -20,15 +20,18 @@ void BatchRendererLayer::OnAttach()
 	// <-------- QUAD --------->
 
 	// vertex buffer
-	m_VBO = new VertexBuffer(4 * sizeof(Vertex2D));
-
-	// indices
-	uint32_t indices[] = {
-		0, 1, 2,
-		2, 3, 0
-	};
+	m_VBO = new VertexBuffer(1000 * 4 * sizeof(Vertex2D));
 
 	// index buffer
+	uint32_t indices[1000 * 6];
+	for (int i = 0, offset = 0; i < 1000 * 6; i += 6, offset += 4) {
+		indices[i + 0] = 0 + offset;
+		indices[i + 1] = 1 + offset;
+		indices[i + 2] = 2 + offset;
+		indices[i + 3] = 2 + offset;
+		indices[i + 4] = 3 + offset;
+		indices[i + 5] = 0 + offset;
+	}
 	m_IBO = new IndexBuffer((void*)indices, sizeof(indices));
 
 	// vertex array
@@ -92,15 +95,31 @@ void BatchRendererLayer::OnRender()
 	m_FBO->Unbind();
 
 	// quad submission
-	float x = (float)m_Owner->GetWindow()->GetViewportWidth()  / 2;
-	float y = (float)m_Owner->GetWindow()->GetViewportHeight() / 2; 
-	float halfScale = 100 / 2;
-	Vertex2D v0({ x + halfScale, y + halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, 2.0f);       // right - up
-    Vertex2D v1({ x + halfScale, y - halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f }, 2.0f);       // right - down
-    Vertex2D v2({ x - halfScale, y - halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f }, 2.0f);       // left  - down
-    Vertex2D v3({ x - halfScale, y + halfScale, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, 2.0f);       // left  - up
-    std::array<Vertex2D, 4> quad = { v0, v1, v2, v3 };
-	m_VBO->SubmitData(quad.data(), quad.size() * sizeof(Vertex2D));
+	Vertex2D quads[4 * 8 * 8];
+	Vertex2D* next = quads;
+	for (uint32_t i = 0; i < 8; ++i) {
+		for (uint32_t j = 0; j < 8; ++j) {
+			float scale = 100.0f;
+			float x = i * scale;
+			float y = j * scale; 
+			float textureSlotID = (i + j) % 2 == 0 ? 1.0f : 2.0f;
+			/*float textureSlotID = 0.0f;
+			glm::vec4 color; 
+			if ((i + j) % 2 == 0)
+				color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+			else 
+				color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);*/
+			glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			Vertex2D v0({ x + scale, y + scale, 0.0f }, color, { 1.0f, 1.0f }, textureSlotID);       	// right - up
+			Vertex2D v1({ x + scale, y, 0.0f }, color, { 1.0f, 0.0f }, textureSlotID);       			// right - down
+			Vertex2D v2({ x, y, 0.0f }, color, { 0.0f, 0.0f }, textureSlotID);       					// left  - down
+			Vertex2D v3({ x, y + scale, 0.0f }, color, { 0.0f, 1.0f }, textureSlotID);       			// left  - up
+			std::array<Vertex2D, 4> quad = {v0, v1, v2, v3};
+			memcpy(next, quad.data(), quad.size() * sizeof(Vertex2D));
+			next += 4;
+		}
+	}
+	m_VBO->SubmitData(quads, sizeof(quads));
 
 	// quads rendering
 	m_WhiteTexture->Bind(0);
@@ -110,7 +129,7 @@ void BatchRendererLayer::OnRender()
 	m_Shader->SetMat4("u_View", m_Camera->GetView());
 	m_Shader->SetMat4("u_Projection", m_Camera->GetProjection());
 	m_Shader->Unbind();
-	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO);
+	Renderer::DrawQuad(m_VAO, m_IBO, m_Shader, m_FBO, 6 * 8 * 8);
 }
 
 void BatchRendererLayer::OnImGuiRender()

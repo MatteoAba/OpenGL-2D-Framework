@@ -25,6 +25,7 @@ struct Vertex2D
 	glm::vec2 textureCoordinates;
 	float textureSlotID;
 
+	Vertex2D() {}
 	Vertex2D(glm::vec3 pos, glm::vec4 col, glm::vec2 texCoord, float texID)
 		: position(pos), color(col), textureCoordinates(texCoord), textureSlotID(texID) {}
 };

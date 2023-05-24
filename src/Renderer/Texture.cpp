@@ -94,3 +94,79 @@ glm::vec4 Texture::GetSubTextureCoordinates(uint32_t row, uint32_t column)
 
     return glm::vec4({x1, y1, x1 + subTextureWidth / m_Width, y1 + subTextureHeight / m_Height});
 }
+
+TextureArray::TextureArray(uint32_t width, uint32_t height, uint32_t layerCount)
+    : m_NextLayer(0), m_Width(width), m_Height(height), m_LayerCount(layerCount)
+{
+    // generate the array
+    glGenTextures(1, &m_RendererID);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, m_RendererID);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, width, height, layerCount);
+
+    // fill and filtering option
+    glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+}
+
+TextureArray::~TextureArray()
+{
+    glDeleteTextures(1, &m_RendererID);
+}
+
+void TextureArray::Bind(uint32_t slot)
+{
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m_RendererID);
+}
+
+void TextureArray::Unbind()
+{
+    glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+
+uint32_t TextureArray::SubmitTexture(uint32_t color)
+{
+    // generate the single color texture on CPU side
+    uint32_t* data = new uint32_t[m_Width * m_Height];
+    for (uint32_t i = 0; i < m_Width * m_Height; ++i)
+        data[i] = color;
+    
+    // submit the texture to the array
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, m_NextLayer, m_Width, m_Height, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    m_NextLayer++;
+
+    delete[] data;
+    return m_NextLayer - 1;
+}
+
+uint32_t TextureArray::SubmitTexture(const std::string& filePath)
+{
+    uint32_t width, height, bitPerPixel;
+
+    // TODO: implements nextLayer check
+
+    // image loading in RAM
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data = stbi_load(filePath.c_str(), (int*)&width, (int*)&height, (int*)&bitPerPixel, 0);    
+    
+    // extract the format
+    GLenum format = GL_RGBA;
+    switch (bitPerPixel)
+    {
+        case 1: format = GL_RED;  break;
+        case 3: format = GL_RGB;  break;
+        case 4: format = GL_RGBA; break;
+        default: break;
+    }
+
+    // submit texture to the layer
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, m_NextLayer, width, height, 1, format, GL_UNSIGNED_BYTE, data);
+    m_NextLayer++;
+    
+    // free RAM
+    stbi_image_free(data);
+
+    return m_NextLayer - 1;
+}

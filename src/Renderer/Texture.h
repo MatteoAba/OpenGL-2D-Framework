@@ -21,3 +21,19 @@ private:
 	uint32_t m_Width, m_Height, m_BitPerPixel;
 	uint32_t m_TexturePerRow, m_TexturePerColumn; 
 };
+
+class TextureArray
+{
+public:
+	TextureArray(uint32_t width, uint32_t height, uint32_t layerCount);
+	~TextureArray();
+	void Bind(uint32_t slot = 0);
+	void Unbind();
+	uint32_t SubmitTexture(uint32_t color = 0xFFFFFFFF);
+	uint32_t SubmitTexture(const std::string& filePath);
+
+private:
+	uint32_t m_RendererID;
+	uint32_t m_NextLayer;
+	uint32_t m_Width, m_Height, m_LayerCount;
+};

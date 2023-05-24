@@ -28,6 +28,9 @@ private:
 	VertexArray*  m_VAO;
 	Framebuffer*  m_FBO;
 	Shader* m_Shader;
-	Texture *m_BrickTexture, *m_IconTexture, *m_WhiteTexture;
+	TextureArray* m_Textures;
 	OrthographicCamera* m_Camera;
+	OrthographicCameraController* m_CameraController;
+	uint8_t m_CheckerboardRows, m_CheckerboardColumns;
+	float m_QuadSize;
 };

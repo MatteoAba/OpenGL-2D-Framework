@@ -8,14 +8,27 @@ bool Renderer::m_DepthTesting = false;
 float Renderer::m_MaxFrameTime = 0.0f;
 bool Renderer::m_VSync = false;
 bool Renderer::m_MSAA = false;
+uint32_t Renderer::m_MaxTextureUnits = 0;
+uint32_t Renderer::m_MaxArrayTextureLayers = 0;
 
 void Renderer::Init(Application* owner, int maxFrameRate)
 {
 	m_Owner = owner;
+
+	// framerate
 	if (maxFrameRate)
 		m_MaxFrameTime = 1.0f / (float)maxFrameRate;
 	else
 		m_MaxFrameTime = 0.0f;
+
+	// hardware specific values
+	int maxTextureUnit, maxArrayTextureLayers;
+	glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxTextureUnit);
+	glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxArrayTextureLayers);
+	m_MaxTextureUnits = (uint32_t)maxTextureUnit;
+	m_MaxArrayTextureLayers = (uint32_t)maxArrayTextureLayers;
+	LOG_INFO("Number of Texture Unit: {}", m_MaxTextureUnits);
+	LOG_INFO("Maximum Number of Layers for Texture Units: {}", m_MaxArrayTextureLayers);
 }
 
 void Renderer::SetBlending(bool value)

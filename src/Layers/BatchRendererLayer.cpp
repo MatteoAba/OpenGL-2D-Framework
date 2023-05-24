@@ -6,7 +6,7 @@
 #include "../Renderer/Renderer.h"
 
 BatchRendererLayer::BatchRendererLayer(std::string name, Application* owner)
-	: Layer(name, owner)
+	: Layer(name, owner), m_CheckerboardRows(8), m_CheckerboardColumns(8), m_QuadSize(70.0f)
 {
 }
 
@@ -16,6 +16,7 @@ void BatchRendererLayer::OnAttach()
 	float width = (float)(m_Owner->GetWindow()->GetViewportWidth());
 	float height = (float)(m_Owner->GetWindow()->GetViewportHeight());
 	m_Camera = new OrthographicCamera(width, height);
+	m_CameraController = new OrthographicCameraController(m_Camera);
 	
 	// <-------- QUAD --------->
 
@@ -44,17 +45,16 @@ void BatchRendererLayer::OnAttach()
 	m_VAO->AddBuffer(layout, *m_VBO);
 
 	// textures
-    m_WhiteTexture = new Texture();
-	m_BrickTexture = new Texture("assets/Img/bricks.png");
-	m_IconTexture  = new Texture("assets/Img/icon.png");
+	m_Textures = new TextureArray(1024, 1024, 3);
+	m_Textures->Bind();
+	m_Textures->SubmitTexture();							// white texture
+	m_Textures->SubmitTexture("assets/Img/bricks.png");
+	m_Textures->SubmitTexture("assets/Img/icon.png");
 
     // shader
 	m_Shader = new Shader("Quad", "assets/Shader/Vertex2D.vert", "assets/Shader/Vertex2D.frag");
-    int samplers[32];
-    for	(int i = 0; i < 32; ++i)
-        samplers[i] = i;
     m_Shader->Bind();
-    m_Shader->SetIntArray("u_Textures", samplers, 32);
+	m_Shader->SetInt("u_Textures", 0);
 	m_Shader->SetMat4("u_Model", glm::mat4(1.0f));
 	m_Shader->Unbind();
 
@@ -70,21 +70,20 @@ void BatchRendererLayer::OnDetach()
 	delete m_VAO;
 	delete m_VBO;
 	delete m_IBO;
-	delete m_BrickTexture;
-	delete m_IconTexture;
-	delete m_WhiteTexture;
+	delete m_Textures;
 	delete m_FBO;
 	delete m_Camera;
+	delete m_CameraController;
 }
 
 void BatchRendererLayer::OnEvent(Event e)
 {
-    if (e.GetType() == EventType::VIEWPORTRESIZE)
-		m_Camera->ChangeProjection((float)e.GetStructure().Resize.width, (float)e.GetStructure().Resize.height);
+	m_CameraController->OnEvent(e);
 }
 
 void BatchRendererLayer::OnUpdate(float ts)
 {
+	m_CameraController->OnUpdate(ts);
 }
 
 void BatchRendererLayer::OnRender()
@@ -97,24 +96,25 @@ void BatchRendererLayer::OnRender()
 	// quad submission
 	Vertex2D quads[4 * 8 * 8];
 	Vertex2D* next = quads;
-	for (uint32_t i = 0; i < 8; ++i) {
-		for (uint32_t j = 0; j < 8; ++j) {
-			float scale = 100.0f;
-			float x = i * scale;
-			float y = j * scale; 
+	for (uint32_t i = 0; i < m_CheckerboardRows; ++i) {
+		for (uint32_t j = 0; j < m_CheckerboardColumns; ++j) {
+			// position options
+			float x = i * m_QuadSize;
+			float y = j * m_QuadSize; 
+			
+			// texture and color options
 			float textureSlotID = (i + j) % 2 == 0 ? 1.0f : 2.0f;
-			/*float textureSlotID = 0.0f;
-			glm::vec4 color; 
-			if ((i + j) % 2 == 0)
-				color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			else 
-				color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);*/
+			float textureWidth  = (i + j) % 2 == 0 ? 1.0f : (533.0f / 1024.0f);
+			float textureHeight = (i + j) % 2 == 0 ? 1.0f : (533.0f / 1024.0f);
 			glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-			Vertex2D v0({ x + scale, y + scale, 0.0f }, color, { 1.0f, 1.0f }, textureSlotID);       	// right - up
-			Vertex2D v1({ x + scale, y, 0.0f }, color, { 1.0f, 0.0f }, textureSlotID);       			// right - down
-			Vertex2D v2({ x, y, 0.0f }, color, { 0.0f, 0.0f }, textureSlotID);       					// left  - down
-			Vertex2D v3({ x, y + scale, 0.0f }, color, { 0.0f, 1.0f }, textureSlotID);       			// left  - up
-			std::array<Vertex2D, 4> quad = {v0, v1, v2, v3};
+
+			// quad generation
+			Vertex2D v0({ x + m_QuadSize, y + m_QuadSize, 0.0f }, color, { textureWidth, textureHeight }, textureSlotID);     	// right - up
+			Vertex2D v1({ x + m_QuadSize, y, 0.0f }, color, { textureWidth, 0.0f }, textureSlotID);       						// right - down
+			Vertex2D v2({ x, y, 0.0f }, color, { 0.0f, 0.0f }, textureSlotID);       											// left  - down
+			Vertex2D v3({ x, y + m_QuadSize, 0.0f }, color, { 0.0f, textureHeight }, textureSlotID);       						// left  - up
+			std::array<Vertex2D, 4> quad = { v0, v1, v2, v3 };
+
 			memcpy(next, quad.data(), quad.size() * sizeof(Vertex2D));
 			next += 4;
 		}
@@ -122,9 +122,6 @@ void BatchRendererLayer::OnRender()
 	m_VBO->SubmitData(quads, sizeof(quads));
 
 	// quads rendering
-	m_WhiteTexture->Bind(0);
-	m_BrickTexture->Bind(1);
-	m_IconTexture->Bind(2);
 	m_Shader->Bind();
 	m_Shader->SetMat4("u_View", m_Camera->GetView());
 	m_Shader->SetMat4("u_Projection", m_Camera->GetProjection());
@@ -141,6 +138,14 @@ void BatchRendererLayer::OnImGuiRender()
 
 		// update viewport
 		m_Owner->GetWindow()->UpdateViewport((uint32_t)wsize.x, (uint32_t)wsize.y);
+	}
+	ImGui::End();
+
+	// settings for camera and rendered checkerboard
+	ImGui::Begin("Settings");
+	{
+		ImGui::SliderFloat("Quad Size", &m_QuadSize, 25.0f, 100.0f);
+		ImGui::SliderFloat("Camera Speed", m_CameraController->GetSpeedPointer(), 300.0f, 600.0f);
 	}
 	ImGui::End();
 }

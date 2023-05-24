@@ -70,4 +70,5 @@ private:
 	static bool m_VSync;
 	static bool m_MSAA;
 	static float m_MaxFrameTime;
+	static uint32_t m_MaxTextureUnits, m_MaxArrayTextureLayers;
 };

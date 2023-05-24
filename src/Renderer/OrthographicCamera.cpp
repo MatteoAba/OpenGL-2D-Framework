@@ -32,16 +32,16 @@ void OrthographicCameraController::OnEvent(Event e)
 		switch (e.GetStructure().Key.button)
 		{
 		case Keycode::KEY_W:
-			m_Movement += glm::vec3(0.0f, 1.0f, 0.0f);
-			break;
-		case Keycode::KEY_A:
-			m_Movement += glm::vec3(-1.0f, 0.0f, 0.0f);
-			break;
-		case Keycode::KEY_S:
 			m_Movement += glm::vec3(0.0f, -1.0f, 0.0f);
 			break;
+		case Keycode::KEY_A:
+			m_Movement += glm::vec3(+1.0f, 0.0f, 0.0f);
+			break;
+		case Keycode::KEY_S:
+			m_Movement += glm::vec3(0.0f, +1.0f, 0.0f);
+			break;
 		case Keycode::KEY_D:
-			m_Movement += glm::vec3(1.0f, 0.0f, 0.0f);
+			m_Movement += glm::vec3(-1.0f, 0.0f, 0.0f);
 			break;
 		}
 	}
@@ -51,16 +51,16 @@ void OrthographicCameraController::OnEvent(Event e)
 		switch (e.GetStructure().Key.button)
 		{
 		case Keycode::KEY_W:
-			m_Movement += glm::vec3(0.0f, -1.0f, 0.0f);
-			break;
-		case Keycode::KEY_A:
-			m_Movement += glm::vec3(1.0f, 0.0f, 0.0f);
-			break;
-		case Keycode::KEY_S:
 			m_Movement += glm::vec3(0.0f, 1.0f, 0.0f);
 			break;
-		case Keycode::KEY_D:
+		case Keycode::KEY_A:
 			m_Movement += glm::vec3(-1.0f, 0.0f, 0.0f);
+			break;
+		case Keycode::KEY_S:
+			m_Movement += glm::vec3(0.0f, -1.0f, 0.0f);
+			break;
+		case Keycode::KEY_D:
+			m_Movement += glm::vec3(1.0f, 0.0f, 0.0f);
 			break;
 		}
 	}

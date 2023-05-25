@@ -4,6 +4,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Framebuffer.h"
+#include "Texture.h"
 
 struct RendererStats
 {
@@ -28,6 +29,19 @@ struct Vertex2D
 	Vertex2D() {}
 	Vertex2D(glm::vec3 pos, glm::vec4 col, glm::vec2 texCoord, float texID)
 		: position(pos), color(col), textureCoordinates(texCoord), textureSlotID(texID) {}
+	void Print();
+};
+
+struct BatchData
+{
+	VertexBuffer* VBO;
+	IndexBuffer*  IBO;
+	VertexArray*  VAO;
+	TextureArray* textures;
+	uint32_t indicesToDraw;
+	Vertex2D *buffer, *nextVertexPosition;
+
+	BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount);
 };
 
 class Renderer
@@ -50,6 +64,14 @@ public:
 	static void DrawQuad(VertexArray* VAO, Shader* Shader, Framebuffer* FBO = nullptr);
 	static void DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO = nullptr, uint32_t indicesCount = 6);
 	
+	// batch rendering
+	static void SetupBatchRendering(uint32_t maxQuadsCount, Shader* shader, Framebuffer* FBO);
+	static void StopBatchRendering();
+	static void InitNewBatch();
+	static void EndBatch();
+	static float AddTextureToBatch(const std::string& filePath);
+	static void DrawQuad(Vertex2D (&quad)[4]);
+
 	// statistics
 	static inline RendererStats GetStats() { return m_RenderStats; }
 	static inline void SetFrameTime(float value)   { m_RenderStats.frameTime  = value; }
@@ -71,4 +93,10 @@ private:
 	static bool m_MSAA;
 	static float m_MaxFrameTime;
 	static uint32_t m_MaxTextureUnits, m_MaxArrayTextureLayers;
+
+	// batch rendering
+	static uint32_t m_MaxQuadsCount, m_MaxVerticesCount, m_MaxIndicesCount;
+	static BatchData* m_BatchData;
+	static Shader* m_BatchShader;
+	static Framebuffer* m_BatchFBO;
 };

@@ -32,8 +32,8 @@ BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount)
 	VBO = new VertexBuffer(maxVerticesCount * sizeof(Vertex2D));
 
 	// index buffer
-	uint32_t indices[maxIndicesCount];
-	for (int i = 0, offset = 0; i < maxIndicesCount; i += 6, offset += 4) {
+	uint32_t* indices = new uint32_t[maxIndicesCount];
+	for (uint32_t i = 0, offset = 0; i < maxIndicesCount; i += 6, offset += 4) {
 		indices[i + 0] = 0 + offset;
 		indices[i + 1] = 1 + offset;
 		indices[i + 2] = 2 + offset;
@@ -41,7 +41,8 @@ BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount)
 		indices[i + 4] = 3 + offset;
 		indices[i + 5] = 0 + offset;
 	}
-	IBO = new IndexBuffer((void*)indices, sizeof(indices));
+	IBO = new IndexBuffer((void*)indices, maxIndicesCount * sizeof(uint32_t));
+	delete[] indices;
 	indicesToDraw = 0;
 
 	// vertex array

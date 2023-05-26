@@ -33,7 +33,7 @@ BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount)
 
 	// index buffer
 	uint32_t indices[maxIndicesCount];
-	for (int i = 0, offset = 0; i < 1000 * 6; i += 6, offset += 4) {
+	for (int i = 0, offset = 0; i < maxIndicesCount; i += 6, offset += 4) {
 		indices[i + 0] = 0 + offset;
 		indices[i + 1] = 1 + offset;
 		indices[i + 2] = 2 + offset;
@@ -264,10 +264,10 @@ float Renderer::AddTextureToBatch(const std::string& filePath)
 
 void Renderer::DrawQuad(Vertex2D (&quad)[4]) 
 {
-	// check if there is space - TODO start a new batch
+	// check if there is space, else start a new batch
 	if (m_BatchData->indicesToDraw == m_MaxIndicesCount) {
-		LOG_ERROR("Max number of vertices reached for the batch");
-		return;
+		EndBatch();
+		InitNewBatch();
 	}
 
 	// copy the quad in the buffer

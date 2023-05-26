@@ -67,8 +67,8 @@ void BatchRendererLayer::OnRender()
 	for (uint32_t i = 0; i < m_CheckerboardRows; ++i) {
 		for (uint32_t j = 0; j < m_CheckerboardColumns; ++j) {
 			// position options
-			float x = i * m_QuadSize;
-			float y = j * m_QuadSize; 
+			float x = j * m_QuadSize;
+			float y = i * m_QuadSize; 
 			
 			// texture and color options
 			float textureSlotID = (i + j) % 2 == 0 ? 1.0f : 2.0f;

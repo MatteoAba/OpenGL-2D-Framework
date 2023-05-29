@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "../Layers/TestLayer.h"
 #include "../Layers/BatchRendererLayer.h"
+#include "../Layers/TilesMapLayer.h"
 #include "../Renderer/Renderer.h"
 
 Application::Application(uint32_t width, uint32_t height, const std::string& title)
@@ -35,8 +36,9 @@ void Application::Inizialize()
 
     // layers setup
     // Layer* test = new TestLayer("Test Layer", this);
-    Layer* batch = new BatchRendererLayer("Batch Renderer Layer", this);
-    m_LayerStack->PushLayer(batch);
+    // Layer* batch = new BatchRendererLayer("Batch Renderer Layer", this);
+    Layer* tilesMap = new TilesMapLayer("Tiles Map Layer", this);
+    m_LayerStack->PushLayer(tilesMap);
 }
 
 void Application::Run()

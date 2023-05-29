@@ -95,6 +95,8 @@ set(PROJECT_SRC
     src/Layers/ImGuiLayer.cpp
     src/Layers/BatchRendererLayer.h
     src/Layers/BatchRendererLayer.cpp
+    src/Layers/TilesMapLayer.h
+    src/Layers/TilesMapLayer.cpp
 
     # --- src/Renderer/
     src/Renderer/Renderer.h

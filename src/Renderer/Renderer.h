@@ -69,7 +69,7 @@ public:
 	static void StopBatchRendering();
 	static void InitNewBatch();
 	static void EndBatch();
-	static float AddTextureToBatch(const std::string& filePath);
+	static glm::vec3 AddTextureToBatch(const std::string& filePath);
 	static void DrawQuad(Vertex2D (&quad)[4]);
 
 	// statistics

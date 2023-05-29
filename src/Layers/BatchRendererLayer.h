@@ -33,4 +33,5 @@ private:
 	OrthographicCameraController* m_CameraController;
 	uint8_t m_CheckerboardRows, m_CheckerboardColumns;
 	float m_QuadSize;
+	std::vector<glm::vec3> m_TextureInfo;
 };

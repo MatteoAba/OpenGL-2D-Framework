@@ -29,8 +29,8 @@ public:
 	~TextureArray();
 	void Bind(uint32_t slot = 0);
 	void Unbind();
-	uint32_t SubmitTexture(uint32_t color = 0xFFFFFFFF);
-	uint32_t SubmitTexture(const std::string& filePath);
+	uint32_t  SubmitTexture(uint32_t color = 0xFFFFFFFF);
+	glm::vec3 SubmitTexture(const std::string& filePath);
 
 private:
 	uint32_t m_RendererID;

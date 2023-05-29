@@ -141,7 +141,7 @@ uint32_t TextureArray::SubmitTexture(uint32_t color)
     return m_NextLayer - 1;
 }
 
-uint32_t TextureArray::SubmitTexture(const std::string& filePath)
+glm::vec3 TextureArray::SubmitTexture(const std::string& filePath)
 {
     uint32_t width, height, bitPerPixel;
 
@@ -161,12 +161,15 @@ uint32_t TextureArray::SubmitTexture(const std::string& filePath)
         default: break;
     }
 
-    // submit texture to the layer
+    // submit texture to the layer and compute the texture normalized size that must be used
     glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, m_NextLayer, width, height, 1, format, GL_UNSIGNED_BYTE, data);
+    float normalizedWidth  = (float)width  / (float)m_Width;
+    float normalizedHeight = (float)height / (float)m_Height;
+    glm::vec3 retInfo = { normalizedWidth, normalizedHeight, m_NextLayer };
     m_NextLayer++;
     
     // free RAM
     stbi_image_free(data);
 
-    return m_NextLayer - 1;
+    return retInfo;
 }

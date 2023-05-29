@@ -257,10 +257,9 @@ void Renderer::EndBatch()
 }
 
 
-float Renderer::AddTextureToBatch(const std::string& filePath)
+glm::vec3 Renderer::AddTextureToBatch(const std::string& filePath)
 {
-	uint32_t layer = m_BatchData->textures->SubmitTexture(filePath);
-	return (float)layer;
+	return m_BatchData->textures->SubmitTexture(filePath);
 }
 
 void Renderer::DrawQuad(Vertex2D (&quad)[4]) 

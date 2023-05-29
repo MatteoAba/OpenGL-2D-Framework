@@ -32,8 +32,8 @@ void BatchRendererLayer::OnAttach()
 	uint32_t maxVerticesCount = 1000;
 	glm::u32vec3 textureArraySize = { 1024U, 1024U, 3U };			// { width, height, layers number }
 	Renderer::SetupBatchRendering(maxVerticesCount, m_Shader, textureArraySize, m_FBO);
-	Renderer::AddTextureToBatch("assets/Img/bricks.png");
-	Renderer::AddTextureToBatch("assets/Img/icon.png");
+	m_TextureInfo.push_back(Renderer::AddTextureToBatch("assets/Img/bricks.png"));
+	m_TextureInfo.push_back(Renderer::AddTextureToBatch("assets/Img/icon.png"));
 	Renderer::SetBlending(true);
 }
 
@@ -74,9 +74,9 @@ void BatchRendererLayer::OnRender()
 			float y = i * m_QuadSize; 
 			
 			// texture and color options
-			float textureSlotID = (i + j) % 2 == 0 ? 1.0f : 2.0f;
-			float textureWidth  = (i + j) % 2 == 0 ? 1.0f : (533.0f / 1024.0f);
-			float textureHeight = (i + j) % 2 == 0 ? 1.0f : (533.0f / 1024.0f);
+			float textureSlotID = (i + j) % 2 == 0 ? m_TextureInfo[0][2] : m_TextureInfo[1][2];
+			float textureWidth  = (i + j) % 2 == 0 ? m_TextureInfo[0][0] : m_TextureInfo[1][0];
+			float textureHeight = (i + j) % 2 == 0 ? m_TextureInfo[0][1] : m_TextureInfo[1][1];
 			glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 			// quad generation

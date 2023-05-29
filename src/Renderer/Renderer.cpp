@@ -34,12 +34,12 @@ BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount, glm::u
 	// index buffer
 	uint32_t* indices = new uint32_t[maxIndicesCount];
 	for (uint32_t i = 0, offset = 0; i < maxIndicesCount; i += 6, offset += 4) {
-		indices[i + 0] = 0 + offset;
-		indices[i + 1] = 1 + offset;
-		indices[i + 2] = 2 + offset;
-		indices[i + 3] = 2 + offset;
-		indices[i + 4] = 3 + offset;
-		indices[i + 5] = 0 + offset;
+		indices[i + 0] = 0U + offset;
+		indices[i + 1] = 1U + offset;
+		indices[i + 2] = 2U + offset;
+		indices[i + 3] = 2U + offset;
+		indices[i + 4] = 3U + offset;
+		indices[i + 5] = 0U + offset;
 	}
 	IBO = new IndexBuffer((void*)indices, maxIndicesCount * sizeof(uint32_t));
 	delete[] indices;
@@ -61,6 +61,7 @@ BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount, glm::u
 
 	// quads CPU buffer
 	buffer = new Vertex2D[maxVerticesCount];
+	nextVertexPosition = nullptr;
 }
 
 void Renderer::Init(Application* owner, int maxFrameRate)

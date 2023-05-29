@@ -26,7 +26,7 @@ void Vertex2D::Print()
 	LOG_TRACE("Texture Layer: {}", textureSlotID);
 }
 
-BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount)
+BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount, glm::u32vec3 textureArraySizes)
 {
 	// vertex buffer
 	VBO = new VertexBuffer(maxVerticesCount * sizeof(Vertex2D));
@@ -55,7 +55,7 @@ BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount)
 	VAO->AddBuffer(layout, *VBO);
 
 	// textures
-	textures = new TextureArray(1024, 1024, 3);
+	textures = new TextureArray(textureArraySizes[0], textureArraySizes[1], textureArraySizes[2]);
 	textures->Bind();
 	textures->SubmitTexture();							// white texture
 
@@ -208,7 +208,7 @@ void Renderer::DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Fram
 		FBO->Unbind();
 }
 
-void Renderer::SetupBatchRendering(uint32_t maxQuadsCount, Shader* shader, Framebuffer* FBO)
+void Renderer::SetupBatchRendering(uint32_t maxQuadsCount, Shader* shader, glm::u32vec3 textureArraySizes, Framebuffer* FBO)
 {
 	// setup limits
 	m_MaxQuadsCount = maxQuadsCount;
@@ -220,7 +220,7 @@ void Renderer::SetupBatchRendering(uint32_t maxQuadsCount, Shader* shader, Frame
 	m_BatchFBO = FBO;
 
 	// start bacth data structure
-	m_BatchData = new BatchData(m_MaxVerticesCount, m_MaxIndicesCount);
+	m_BatchData = new BatchData(m_MaxVerticesCount, m_MaxIndicesCount, textureArraySizes);
 }
 
 void Renderer::StopBatchRendering()

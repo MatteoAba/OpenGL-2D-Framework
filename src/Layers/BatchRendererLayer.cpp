@@ -29,9 +29,12 @@ void BatchRendererLayer::OnAttach()
 	m_FBO = new Framebuffer(m_Owner, true);
 	
 	// batch renderer
-	Renderer::SetupBatchRendering(1000, m_Shader, m_FBO);
+	uint32_t maxVerticesCount = 1000;
+	glm::u32vec3 textureArraySize = { 1024U, 1024U, 3U };			// { width, height, layers number }
+	Renderer::SetupBatchRendering(maxVerticesCount, m_Shader, textureArraySize, m_FBO);
 	Renderer::AddTextureToBatch("assets/Img/bricks.png");
 	Renderer::AddTextureToBatch("assets/Img/icon.png");
+	Renderer::SetBlending(true);
 }
 
 void BatchRendererLayer::OnDetach()

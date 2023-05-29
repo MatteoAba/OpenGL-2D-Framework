@@ -41,7 +41,7 @@ struct BatchData
 	uint32_t indicesToDraw;
 	Vertex2D *buffer, *nextVertexPosition;
 
-	BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount);
+	BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount, glm::u32vec3 textureArraySizes);
 };
 
 class Renderer
@@ -65,7 +65,7 @@ public:
 	static void DrawQuad(VertexArray* VAO, IndexBuffer* IBO, Shader* Shader, Framebuffer* FBO = nullptr, uint32_t indicesCount = 6);
 	
 	// batch rendering
-	static void SetupBatchRendering(uint32_t maxQuadsCount, Shader* shader, Framebuffer* FBO);
+	static void SetupBatchRendering(uint32_t maxQuadsCount, Shader* shader, glm::u32vec3 textureArraySizes, Framebuffer* FBO);
 	static void StopBatchRendering();
 	static void InitNewBatch();
 	static void EndBatch();

@@ -8,7 +8,7 @@
 glm::vec4 getUVCoordinates(uint32_t i, uint32_t j, uint32_t subTextureWidth, uint32_t subTextureHeight, uint32_t textureWidth, uint32_t textureHeight);
 
 TilesMapLayer::TilesMapLayer(std::string name, Application* owner)
-	: Layer(name, owner)
+	: Layer(name, owner), m_TerrainMapWidth(10), m_TerrainMapHeight(7), m_QuadSize(100.0f)
 {
 }
 
@@ -37,24 +37,76 @@ void TilesMapLayer::OnAttach()
 	Renderer::AddTextureToBatch("assets/Img/tileset.png");
 	Renderer::SetBlending(true);
 
-	// terrain map
-	glm::u32vec2 terrainMap[3][3] = {
-		{ glm::u32vec2(7, 0), glm::u32vec2(7, 1), glm::u32vec2(7, 2) },
-		{ glm::u32vec2(8, 0), glm::u32vec2(8, 1), glm::u32vec2(8, 2) },
-		{ glm::u32vec2(9, 0), glm::u32vec2(9, 1), glm::u32vec2(9, 2) }
-	};
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			m_TerrainMap[i][j][0] = terrainMap[i][j][0];
-			m_TerrainMap[i][j][1] = terrainMap[i][j][1];
+	// ------------ terrain map initialization ------------
+
+	m_TerrainMap = new glm::u32vec2*[m_TerrainMapHeight];
+	for (uint32_t i = 0; i < m_TerrainMapHeight; ++i)
+		m_TerrainMap[i] = new glm::u32vec2[m_TerrainMapWidth];
+
+	// internal quads
+	for (uint32_t i = 1; i < m_TerrainMapHeight - 1; i++) {
+		for (int j = 1; j < m_TerrainMapWidth - 1; j++) {
+			m_TerrainMap[i][j][0] = 8;
+			m_TerrainMap[i][j][1] = 1;
 		}
 	}
+
+	// right and left borders
+	for (uint32_t i = 1; i < m_TerrainMapHeight - 1; i++) {
+		m_TerrainMap[i][0][0] = 8;
+		m_TerrainMap[i][0][1] = 0;
+		m_TerrainMap[i][m_TerrainMapWidth - 1][0] = 8;
+		m_TerrainMap[i][m_TerrainMapWidth - 1][1] = 2;
+	}
+
+	// upper and lower borders
+	for (uint32_t j = 1; j < m_TerrainMapWidth - 1; j++) {
+		m_TerrainMap[0][j][0] = 7;
+		m_TerrainMap[0][j][1] = 1;
+		m_TerrainMap[m_TerrainMapHeight - 1][j][0] = 9;
+		m_TerrainMap[m_TerrainMapHeight - 1][j][1] = 1;
+	}
+
+	// corners
+	m_TerrainMap[0][0][0] = 7;
+	m_TerrainMap[0][0][1] = 0;
+	m_TerrainMap[0][m_TerrainMapWidth - 1][0] = 7;
+	m_TerrainMap[0][m_TerrainMapWidth - 1][1] = 2;
+	m_TerrainMap[m_TerrainMapHeight - 1][0][0] = 9;
+	m_TerrainMap[m_TerrainMapHeight - 1][0][1] = 0;
+	m_TerrainMap[m_TerrainMapHeight - 1][m_TerrainMapWidth - 1][0] = 9;
+	m_TerrainMap[m_TerrainMapHeight - 1][m_TerrainMapWidth - 1][1] = 2;
+
+	// ----------------------------------------------------
+
+	// ------------ small house initialization ------------
+
+	glm::u32vec2 smallHouse[5][4] = {
+		{ { 2.0f, 0.0f }, { 2.0f, 1.0f }, { 2.0f, 2.0f }, { 2.0f, 3.0f } },
+		{ { 3.0f, 0.0f }, { 3.0f, 1.0f }, { 3.0f, 2.0f }, { 3.0f, 3.0f } },
+		{ { 4.0f, 0.0f }, { 4.0f, 1.0f }, { 4.0f, 2.0f }, { 4.0f, 3.0f } },
+		{ { 5.0f, 0.0f }, { 5.0f, 1.0f }, { 5.0f, 2.0f }, { 5.0f, 3.0f } },
+		{ { 6.0f, 0.0f }, { 6.0f, 1.0f }, { 6.0f, 2.0f }, { 6.0f, 3.0f } }
+	};
+
+	for (uint32_t i = 0; i < 5; i++) {
+		for (int j = 0; j < 4; j++) {
+			m_SmallHouse[i][j][0] = smallHouse[i][j][0];
+			m_SmallHouse[i][j][1] = smallHouse[i][j][1];
+		}
+	}
+
+	// ----------------------------------------------------
 }
 
 void TilesMapLayer::OnDetach()
 {
 	// stop batch renderer
 	Renderer::StopBatchRendering();
+
+	for (uint32_t i = 0; i < m_TerrainMapHeight; ++i)
+		delete[] m_TerrainMap[i];
+	delete[] m_TerrainMap;
 
 	delete m_Shader;
 	delete m_FBO;
@@ -77,16 +129,14 @@ void TilesMapLayer::OnRender()
 	m_FBO->Bind();
 	Renderer::ClearScreen();
 	m_FBO->Unbind();
-
-	// quads submissions
 	Renderer::InitNewBatch();
-	float quadSize = 100.0f;
-	LOG_WARN("START");
-	for (uint32_t i = 0; i < 3; i++) {
-		for (uint32_t j = 0; j < 3; j++) {
+
+	// terrain quads submissions
+	for (uint32_t i = 0; i < m_TerrainMapHeight; i++) {
+		for (uint32_t j = 0; j < m_TerrainMapWidth; j++) {
 			// position options
-			float x = j * quadSize;
-			float y = i * quadSize;
+			float x = j * m_QuadSize;
+			float y = i * m_QuadSize;
 
 			// texture and color options
 			float textureSlotID = 1.0f;
@@ -94,20 +144,44 @@ void TilesMapLayer::OnRender()
 
 			// texture atlas u/v
 			glm::vec4 uvCoordinates = getUVCoordinates(m_TerrainMap[i][j][0], m_TerrainMap[i][j][1], 16, 16, 208, 160);
-			// glm::vec4 uvCoordinates = {0.0f, 0.0f, 1.0f, 1.0f};
 
 			// quad generation
-			Vertex2D v0({ x + quadSize, y + quadSize, 0.0f }, color, { uvCoordinates[2], uvCoordinates[3]}, textureSlotID);     		// right - up
-			Vertex2D v1({ x + quadSize, y, 0.0f }, color, { uvCoordinates[2], uvCoordinates[1] }, textureSlotID);       						// right - down
-			Vertex2D v2({ x, y, 0.0f }, color, { uvCoordinates[0], uvCoordinates[1] }, textureSlotID);       											// left  - down
-			Vertex2D v3({ x, y + quadSize, 0.0f }, color, { uvCoordinates[0], uvCoordinates[3] }, textureSlotID);       						// left  - up
+			Vertex2D v0({ x + m_QuadSize, y + m_QuadSize, 0.0f }, color, { uvCoordinates[2], uvCoordinates[3]}, textureSlotID);     				// right - up
+			Vertex2D v1({ x + m_QuadSize, y, 0.0f }, color, { uvCoordinates[2], uvCoordinates[1] }, textureSlotID);       							// right - down
+			Vertex2D v2({ x, y, 0.0f }, color, { uvCoordinates[0], uvCoordinates[1] }, textureSlotID);       										// left  - down
+			Vertex2D v3({ x, y + m_QuadSize, 0.0f }, color, { uvCoordinates[0], uvCoordinates[3] }, textureSlotID);       							// left  - up
 			Vertex2D quad[4] = { v0, v1, v2, v3 };
 			
 			// add quad to batch
 			Renderer::DrawQuad(quad);
 		}
 	}
-	LOG_WARN("STOP\n");
+
+	// small house quads submissions
+	for (uint32_t i = 0; i < 5; i++) {
+		for (uint32_t j = 0; j < 4; j++) {
+			// position options centered
+			float x = (j + floor(m_TerrainMapWidth  / 2) - 2) * m_QuadSize;
+			float y = (i + floor(m_TerrainMapHeight / 2)) * m_QuadSize;
+
+			// texture and color options
+			float textureSlotID = 1.0f;
+			glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+			// texture atlas u/v
+			glm::vec4 uvCoordinates = getUVCoordinates(m_SmallHouse[i][j][0], m_SmallHouse[i][j][1], 16, 16, 208, 160);
+
+			// quad generation
+			Vertex2D v0({ x + m_QuadSize, y + m_QuadSize, 0.0f }, color, { uvCoordinates[2], uvCoordinates[3] }, textureSlotID);     				// right - up
+			Vertex2D v1({ x + m_QuadSize, y, 0.0f }, color, { uvCoordinates[2], uvCoordinates[1] }, textureSlotID);       							// right - down
+			Vertex2D v2({ x, y, 0.0f }, color, { uvCoordinates[0], uvCoordinates[1] }, textureSlotID);       										// left  - down
+			Vertex2D v3({ x, y + m_QuadSize, 0.0f }, color, { uvCoordinates[0], uvCoordinates[3] }, textureSlotID);       							// left  - up
+			Vertex2D quad[4] = { v0, v1, v2, v3 };
+
+			// add quad to batch
+			Renderer::DrawQuad(quad);
+		}
+	}
 
 	// quads rendering
 	m_Shader->Bind();
@@ -136,8 +210,6 @@ glm::vec4 getUVCoordinates(uint32_t i, uint32_t j, uint32_t subTextureWidth, uin
 	float y0 = float(i * subTextureHeight) / (float)textureHeight;
 	float x1 = float((j + 1) * subTextureWidth) / (float)textureWidth;
 	float y1 = float((i + 1) * subTextureHeight) / (float)textureHeight;
-	LOG_WARN("{} {} {} {} {} {}", i, j, subTextureWidth, subTextureHeight, textureWidth, textureHeight);
-	LOG_WARN("x0={} y0={} x1={} y1={}", x0, y0, x1, y1);
 
 	return { x0, y0, x1, y1 };
 }

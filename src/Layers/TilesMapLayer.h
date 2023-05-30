@@ -27,5 +27,7 @@ private:
 	Shader* m_Shader;
 	OrthographicCamera* m_Camera;
 	OrthographicCameraController* m_CameraController;
-	glm::u32vec2 m_TerrainMap[3][3];
+	glm::u32vec2** m_TerrainMap;
+	glm::u32vec2 m_SmallHouse[5][4];
+	uint32_t m_TerrainMapWidth, m_TerrainMapHeight, m_QuadSize;
 };

@@ -118,6 +118,13 @@ set(PROJECT_SRC
     src/Renderer/OrthographicCamera.cpp
     src/Renderer/Text.h
     src/Renderer/Text.cpp
+
+    # --- src/Scene
+    src/Scene/Entity.h
+    src/Scene/Entity.cpp
+    src/Scene/Component.h
+    src/Scene/Component/SpriteComponent.h
+    src/Scene/Component/SpriteComponent.cpp
 	
     # --- assets/Shader/
     assets/Shader/Quads.vert
@@ -136,6 +143,8 @@ set(PROJECT_SRC
 source_group(src "src")
 source_group(src/Core "src/Core")
 source_group(src/Layers "src/Layers")
+source_group(src/Scene "src/Scene")
+source_group(src/Scene/Component "src/Scene/Component")
 source_group(src/Renderer "src/Renderer")
 source_group(shader "assets/Shader")
  

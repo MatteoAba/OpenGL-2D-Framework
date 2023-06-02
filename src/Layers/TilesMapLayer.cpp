@@ -97,6 +97,15 @@ void TilesMapLayer::OnAttach()
 	}
 
 	// ----------------------------------------------------
+
+	// entity and components
+	m_Entity = new Entity(m_Owner);
+	m_Entity->SetPosition({200.0f, 200.0f, 0.0f});
+	glm::vec2 spriteSize  = { 100.0f, 100.0f }; 
+	glm::vec2 textureSize = { 16.0f / 208.0f, 16.0f / 160.0f };
+	glm::vec4 uvCoordinates = getUVCoordinates(1.0f, 0.0f, 16, 16, 208, 160);
+	m_SpriteComponent = new SpriteComponent(m_Entity, 1.0f, spriteSize, textureSize, uvCoordinates);
+	m_Entity->AddComponent(m_SpriteComponent);
 }
 
 void TilesMapLayer::OnDetach()
@@ -112,6 +121,7 @@ void TilesMapLayer::OnDetach()
 	delete m_FBO;
 	delete m_Camera;
 	delete m_CameraController;
+	delete m_Entity;
 }
 
 void TilesMapLayer::OnEvent(Event e)
@@ -182,6 +192,9 @@ void TilesMapLayer::OnRender()
 			Renderer::DrawQuad(quad);
 		}
 	}
+
+	// entity rendering
+	m_SpriteComponent->OnRender();
 
 	// quads rendering
 	m_Shader->Bind();

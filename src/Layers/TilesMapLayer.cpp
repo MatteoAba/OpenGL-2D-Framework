@@ -18,7 +18,6 @@ void TilesMapLayer::OnAttach()
 	float width = (float)(m_Owner->GetWindow()->GetViewportWidth());
 	float height = (float)(m_Owner->GetWindow()->GetViewportHeight());
 	m_Camera = new OrthographicCamera(width, height);
-	// m_CameraController = new OrthographicCameraController(m_Camera, 500.0f);
 
 	// shader
 	m_Shader = new Shader("Quad", "assets/Shader/Vertex2D.vert", "assets/Shader/Vertex2D.frag");
@@ -124,7 +123,6 @@ void TilesMapLayer::OnDetach()
 	delete m_Shader;
 	delete m_FBO;
 	delete m_Camera;
-	// delete m_CameraController;
 	delete m_Entity;
 }
 

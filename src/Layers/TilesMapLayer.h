@@ -8,6 +8,7 @@
 #include "../Renderer/OrthographicCamera.h"
 #include "../Scene/Entity.h"
 #include "../Scene/Component/SpriteComponent.h"
+#include "../Scene/Component/InputComponent.h"
 
 class TilesMapLayer : public Layer
 {

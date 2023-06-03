@@ -125,6 +125,8 @@ set(PROJECT_SRC
     src/Scene/Component.h
     src/Scene/Component/SpriteComponent.h
     src/Scene/Component/SpriteComponent.cpp
+    src/Scene/Component/InputComponent.h
+    src/Scene/Component/InputComponent.cpp
 	
     # --- assets/Shader/
     assets/Shader/Quads.vert

@@ -11,7 +11,7 @@ public:
 	~SpriteComponent() {}
 
 	virtual void OnEvent(Event e) override;
-	virtual void OnUpdate(float ts)override;
+	virtual void OnUpdate(float ts) override;
 	void OnRender();
 
 private:

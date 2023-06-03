@@ -106,6 +106,8 @@ void TilesMapLayer::OnAttach()
 	glm::vec4 uvCoordinates = getUVCoordinates(1.0f, 0.0f, 16, 16, 208, 160);
 	m_SpriteComponent = new SpriteComponent(m_Entity, 1.0f, spriteSize, textureSize, uvCoordinates);
 	m_Entity->AddComponent(m_SpriteComponent);
+	InputComponent* inputComponent = new InputComponent(m_Entity, 300.0f);
+	m_Entity->AddComponent(inputComponent);
 }
 
 void TilesMapLayer::OnDetach()
@@ -126,12 +128,14 @@ void TilesMapLayer::OnDetach()
 
 void TilesMapLayer::OnEvent(Event e)
 {
-	m_CameraController->OnEvent(e);
+	if (e.GetType() == EventType::VIEWPORTRESIZE)
+		m_CameraController->OnEvent(e);
+	m_Entity->OnEvent(e);
 }
 
 void TilesMapLayer::OnUpdate(float ts)
 {
-	m_CameraController->OnUpdate(ts);
+	m_Entity->OnUpdate(ts);
 }
 
 void TilesMapLayer::OnRender()

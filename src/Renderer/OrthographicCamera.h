@@ -6,16 +6,21 @@
 class OrthographicCamera
 {
 public:
-	OrthographicCamera(float width, float height);
+	OrthographicCamera(float width, float height, glm::vec3 position = { 0.0f, 0.0f, -3.0f });
 	~OrthographicCamera() {}
 
+	void TranslateCamera();
 	void TranslateCamera(glm::vec3 translation);
 	void ChangeProjection(float width, float height);
 
+	// getters and setters
+	inline glm::vec3 GetPosition() { return m_Position; }
+	inline void SetPosition(const glm::vec3& position) { m_Position = position; }
 	inline glm::mat4 GetView() { return m_View; }
 	inline glm::mat4 GetProjection() { return m_Projection; }
 
 private:
+	glm::vec3 m_Position;
 	glm::mat4 m_View;
 	glm::mat4 m_Projection;
 };

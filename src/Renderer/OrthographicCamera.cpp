@@ -1,11 +1,16 @@
 #include "OrthographicCamera.h"
 #include "../Core/Log.h"
 
-OrthographicCamera::OrthographicCamera(float width, float height)
-	: m_View(glm::mat4(1.0f))
+OrthographicCamera::OrthographicCamera(float width, float height, glm::vec3 position)
+	: m_Position(position), m_View(glm::mat4(1.0f))
 {
-	TranslateCamera(glm::vec3(0.0f, 0.0f, -3.0f));
+	TranslateCamera(m_Position);
 	ChangeProjection(width, height);
+}
+
+void OrthographicCamera::TranslateCamera()
+{
+	m_View = glm::translate(glm::mat4(1.0f), m_Position);
 }
 
 void OrthographicCamera::TranslateCamera(glm::vec3 translation)

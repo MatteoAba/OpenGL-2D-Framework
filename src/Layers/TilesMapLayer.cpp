@@ -18,7 +18,7 @@ void TilesMapLayer::OnAttach()
 	float width = (float)(m_Owner->GetWindow()->GetViewportWidth());
 	float height = (float)(m_Owner->GetWindow()->GetViewportHeight());
 	m_Camera = new OrthographicCamera(width, height);
-	m_CameraController = new OrthographicCameraController(m_Camera, 500.0f);
+	// m_CameraController = new OrthographicCameraController(m_Camera, 500.0f);
 
 	// shader
 	m_Shader = new Shader("Quad", "assets/Shader/Vertex2D.vert", "assets/Shader/Vertex2D.frag");
@@ -108,6 +108,8 @@ void TilesMapLayer::OnAttach()
 	m_Entity->AddComponent(m_SpriteComponent);
 	InputComponent* inputComponent = new InputComponent(m_Entity, 300.0f);
 	m_Entity->AddComponent(inputComponent);
+	CameraComponent* cameraComponent = new CameraComponent(m_Entity, m_Camera);
+	m_Entity->AddComponent(cameraComponent);
 }
 
 void TilesMapLayer::OnDetach()
@@ -122,14 +124,12 @@ void TilesMapLayer::OnDetach()
 	delete m_Shader;
 	delete m_FBO;
 	delete m_Camera;
-	delete m_CameraController;
+	// delete m_CameraController;
 	delete m_Entity;
 }
 
 void TilesMapLayer::OnEvent(Event e)
 {
-	if (e.GetType() == EventType::VIEWPORTRESIZE)
-		m_CameraController->OnEvent(e);
 	m_Entity->OnEvent(e);
 }
 

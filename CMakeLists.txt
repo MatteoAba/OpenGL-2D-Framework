@@ -127,6 +127,8 @@ set(PROJECT_SRC
     src/Scene/Component/SpriteComponent.cpp
     src/Scene/Component/InputComponent.h
     src/Scene/Component/InputComponent.cpp
+    src/Scene/Component/CameraComponent.h
+    src/Scene/Component/CameraComponent.cpp
 	
     # --- assets/Shader/
     assets/Shader/Quads.vert

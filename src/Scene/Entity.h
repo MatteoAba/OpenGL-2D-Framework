@@ -35,6 +35,7 @@ public:
 	inline void SetRotation(float rotation) { m_Rotation = rotation; }
 	inline float GetScale() { return m_Scale; }
 	inline void SetScale(float scale) { m_Scale = scale; }
+	inline Application* GetOwner() { return m_Owner; }
 
 private:
 	Application* m_Owner;

@@ -9,6 +9,7 @@
 #include "../Scene/Entity.h"
 #include "../Scene/Component/SpriteComponent.h"
 #include "../Scene/Component/InputComponent.h"
+#include "../Scene/Component/CameraComponent.h"
 
 class TilesMapLayer : public Layer
 {
@@ -29,7 +30,7 @@ private:
 	Framebuffer* m_FBO;
 	Shader* m_Shader;
 	OrthographicCamera* m_Camera;
-	OrthographicCameraController* m_CameraController;
+	// OrthographicCameraController* m_CameraController;
 	glm::u32vec2** m_TerrainMap;
 	glm::u32vec2 m_SmallHouse[5][4];
 	uint32_t m_TerrainMapWidth, m_TerrainMapHeight, m_QuadSize;

@@ -1,3 +1,3 @@
-# ChessGL
+# Clank GL
 
-Chess in OpenGL
+An OpenGL framework for 2D interactive applications.

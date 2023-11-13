@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE STRING INTERNAL FORCE)
 
 # project name
-project(ChessGL)
+project(ClankGL)
 
 # compile options
 if(MSVC)
@@ -152,10 +152,10 @@ source_group(src/Scene/Component "src/Scene/Component")
 source_group(src/Renderer "src/Renderer")
 source_group(shader "assets/Shader")
  
-add_executable(ChessGL ${PROJECT_SRC})
-target_include_directories(ChessGL PRIVATE "vendor/Glad/include" "vendor/glm" "vendor/stb_image" "vendor/imgui" "vendor/freetype/include")      # cartelle da includere
-target_link_libraries(ChessGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog imgui freetype)	                                            # librerie da linkare
-#target_precompile_headers(ChessGL PRIVATE ${PREC_HEADER})                                                                                      # precompiled headers
+add_executable(ClankGL ${PROJECT_SRC})
+target_include_directories(ClankGL PRIVATE "vendor/Glad/include" "vendor/glm" "vendor/stb_image" "vendor/imgui" "vendor/freetype/include")      # cartelle da includere
+target_link_libraries(ClankGL ${OPENGL_LIBRARIES} glfw Glad glm stb_image spdlog imgui freetype)	                                            # librerie da linkare
+#target_precompile_headers(ClankGL PRIVATE ${PREC_HEADER})                                                                                      # precompiled headers
 
 # copy resources (shader, media, ecc..) in the output folder
 if (MSVC)
@@ -169,9 +169,9 @@ endif()
 # in Visual Studio setup project as Start Up Project
 if (MSVC)
     if (${CMAKE_VERSION} VERSION_LESS "3.6.0") 
-        message("\n\t[ WARNING ]\n\n\tCMake version lower than 3.6.\n\n\t - Please update CMake and rerun; OR\n\t - Manually set 'ChessGL' as StartUp Project in Visual Studio.\n")
+        message("\n\t[ WARNING ]\n\n\tCMake version lower than 3.6.\n\n\t - Please update CMake and rerun; OR\n\t - Manually set 'ClankGL' as StartUp Project in Visual Studio.\n")
     else()
-        set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ChessGL)
+        set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ClankGL)
     endif()
 endif()
 

@@ -1,6 +1,6 @@
 #include "TestLayer.h"
 
-#include "../cglph.h"
+#include "../oglph.h"
 #include "../Core/Log.h"
 #include "../Core/Application.h"
 #include "../Renderer/Renderer.h"
@@ -52,9 +52,9 @@ void TestLayer::OnAttach()
 	// vertex array
 	m_VAO = new VertexArray();
 	VertexLayout layout;
-	layout.AddVertexGroup({ DataType::CGL_FLOAT, 3, false });
-	layout.AddVertexGroup({ DataType::CGL_FLOAT, 3, false });
-	layout.AddVertexGroup({ DataType::CGL_FLOAT, 2, false });
+	layout.AddVertexGroup({ DataType::OGL_FLOAT, 3, false });
+	layout.AddVertexGroup({ DataType::OGL_FLOAT, 3, false });
+	layout.AddVertexGroup({ DataType::OGL_FLOAT, 2, false });
 	m_VAO->AddBuffer(layout, *m_VBO);
 
 	// textures

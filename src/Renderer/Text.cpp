@@ -61,7 +61,7 @@ Text::Text(const std::string& fontPath, Application* owner)
     m_VAO = new VertexArray();
     m_VBO = new VertexBuffer(6 * 4 * sizeof(float));
     VertexLayout layout;
-    layout.AddVertexGroup({ DataType::CGL_FLOAT, 4, false });
+    layout.AddVertexGroup({ DataType::OGL_FLOAT, 4, false });
     m_VAO->AddBuffer(layout, *m_VBO);
 
     // load the shader

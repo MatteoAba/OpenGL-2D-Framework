@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "../cglph.h"
+#include "../oglph.h"
 #include "Log.h"
 #include "../Renderer/Window.h"
 #include "LayerStack.h"

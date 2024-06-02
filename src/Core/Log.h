@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../cglph.h"
+#include "../oglph.h"
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -12,7 +12,7 @@ public:
 	inline static std::shared_ptr<spdlog::logger>& GetLogger() { return s_Logger; }
 
 private:
-	// il logger è statico e condiviso, per poterlo richiamare da application
+	// il logger ï¿½ statico e condiviso, per poterlo richiamare da application
 	static std::shared_ptr<spdlog::logger> s_Logger;
 };
 

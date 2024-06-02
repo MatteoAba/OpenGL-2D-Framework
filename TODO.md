@@ -5,4 +5,4 @@
 * ECS (animated sprite component, collision component)
 * Batch Text Rendering in a Single Draw Call
 * Random Class
-* Rename Project
+* Fix Resize in viewport

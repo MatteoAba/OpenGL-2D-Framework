@@ -1,6 +1,6 @@
 #include "TilesMapLayer.h"
 
-#include "../cglph.h"
+#include "../oglph.h"
 #include "../Core/Log.h"
 #include "../Core/Application.h"
 #include "../Renderer/Renderer.h"

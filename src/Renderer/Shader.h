@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../cglph.h"
+#include "../oglph.h"
 
 class Shader
 {

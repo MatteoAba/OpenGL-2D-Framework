@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../cglph.h"
+#include "../oglph.h"
 #include <glad/glad.h>
 
 class VertexBuffer

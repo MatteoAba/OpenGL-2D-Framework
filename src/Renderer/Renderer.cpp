@@ -48,10 +48,10 @@ BatchData::BatchData(uint32_t maxVerticesCount, uint32_t maxIndicesCount, glm::u
 	// vertex array
 	VAO = new VertexArray();
 	VertexLayout layout;
-	layout.AddVertexGroup({ DataType::CGL_FLOAT, 3, false });
-	layout.AddVertexGroup({ DataType::CGL_FLOAT, 4, false });
-	layout.AddVertexGroup({ DataType::CGL_FLOAT, 2, false });
-	layout.AddVertexGroup({ DataType::CGL_FLOAT, 1, false });
+	layout.AddVertexGroup({ DataType::OGL_FLOAT, 3, false });
+	layout.AddVertexGroup({ DataType::OGL_FLOAT, 4, false });
+	layout.AddVertexGroup({ DataType::OGL_FLOAT, 2, false });
+	layout.AddVertexGroup({ DataType::OGL_FLOAT, 1, false });
 	VAO->AddBuffer(layout, *VBO);
 
 	// textures

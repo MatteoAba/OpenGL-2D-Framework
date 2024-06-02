@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../cglph.h"
+#include "../oglph.h"
 #include "Buffer.h"
 
 enum DataType
 {
-	CGL_UINT32,
-	CGL_FLOAT,
-	CGL_BYTE
+	OGL_UINT32,
+	OGL_FLOAT,
+	OGL_BYTE
 };
 
 struct VertexInfo
@@ -21,9 +21,9 @@ struct VertexInfo
 	{
 		switch (type)
 		{
-			case CGL_UINT32: return 4;
-			case CGL_FLOAT:  return 4;
-			case CGL_BYTE:   return 1;
+			case OGL_UINT32: return 4;
+			case OGL_FLOAT:  return 4;
+			case OGL_BYTE:   return 1;
 		}
 
 		return 0;
@@ -34,9 +34,9 @@ struct VertexInfo
 	{
 		switch (type)
 		{
-			case CGL_UINT32: return GL_UNSIGNED_INT;
-			case CGL_FLOAT:  return GL_FLOAT;
-			case CGL_BYTE:   return GL_UNSIGNED_BYTE;
+			case OGL_UINT32: return GL_UNSIGNED_INT;
+			case OGL_FLOAT:  return GL_FLOAT;
+			case OGL_BYTE:   return GL_UNSIGNED_BYTE;
 		}
 
 		return 0;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../cglph.h"
+#include "../oglph.h"
 #include "../Core/Event.h"
 
 class Entity;

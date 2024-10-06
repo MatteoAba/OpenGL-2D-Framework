@@ -4,7 +4,7 @@ An OpenGL framework for 2D interactive applications.
 
 ## Environment configuration
 
-To compile project are needed:
+To setup the project are needed:
 
 * [Git](https://git-scm.com)
 * [CMAKE 3.8](https://cmake.org)
